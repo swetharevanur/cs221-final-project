@@ -16,7 +16,6 @@ def getPostText(soup):
 		sentences = nltk.word_tokenize(paragraphs)
 		if len(sentences) == 0:
 			continue
-		# print sentences
 		for word in sentences:
 			dataToReturn.append(word)
 	return dataToReturn
@@ -26,7 +25,16 @@ def getPostDate(soup):
 	result = ""
 	for line in soup.find("div", {"class" : "adInfo"}):
 		result += line.split("Posted:", 1)[1]
-	return result.strip()
+	result.split(' ')
+	full_date = result.strip().split(' ')
+	month = stripPunctuation(full_date[1])
+	day = stripPunctuation(full_date[2])
+	year = stripPunctuation(full_date[3])
+	time = stripPunctuation(full_date[4])
+	ampm = stripPunctuation(full_date[5])
+	if ampm == "PM":
+		time = int(time) + 1200
+	return month, day, year, time
 
 
 def getPostTitle(soup):
@@ -66,6 +74,19 @@ def getPostPhoneNumber(tokenizedText):
 				phoneNo.append(word)
 	return ' '.join(phoneNo)
 
+
+def getOtherAdsByUser(soup):
+	otherAds = []
+	for line in soup.findAll("div", {"class" : "cat"}):
+		for a in line.find_all('a', {"class" : "resultsSectionLabel"}, href = True):
+			a.extract() # remove standard links
+		for a in line.find_all('a', href = True):
+			url = a['href'].split('/')
+			postID = url[len(url) - 1]
+			otherAds.append(postID)
+	return otherAds
+ 
+
 # doesn't handle non-unicode emoji characters
 def parsePost(url):
 	information = urllib.urlopen(url).read()
@@ -77,8 +98,8 @@ def parsePost(url):
 	postText = getPostText(soup)
 	print postText
 
-	postDate = getPostDate(soup)
-	print postDate
+	postMonth, postDay, postYear, postTime = getPostDate(soup)
+	print postMonth, postDay, postYear, postTime
 
 	postTitle = getPostTitle(soup)
 	print postTitle
@@ -91,6 +112,9 @@ def parsePost(url):
 
 	postPhone = getPostPhoneNumber(postText)
 	print postPhone
-	
+
+	postOtherAds = getOtherAdsByUser(soup)
+	print postOtherAds
+
 URL = 'http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977'
 parsePost(URL)
