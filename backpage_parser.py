@@ -5,8 +5,10 @@
 
 import nltk
 import urllib
-import requests
 from bs4 import BeautifulSoup
+import re
+import string
+from util import stripPunctuation
 
 def getPostText(soup):
 	dataToReturn = []
@@ -54,6 +56,16 @@ def getPostDistrictID(soup):
 	return [result.split()[1].strip(), result.split()[0].strip()]
 		
 
+def getPostPhoneNumber(tokenizedText):
+	phoneNo = []
+	pattern = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
+	for word in tokenizedText:
+		if re.match(pattern, word) is not None:
+			word = stripPunctuation(word)
+			if word not in phoneNo:
+				phoneNo.append(word)
+	return ' '.join(phoneNo)
+
 # doesn't handle non-unicode emoji characters
 def parsePost(url):
 	information = urllib.urlopen(url).read()
@@ -64,15 +76,21 @@ def parsePost(url):
 
 	postText = getPostText(soup)
 	print postText
+
 	postDate = getPostDate(soup)
 	print postDate
+
 	postTitle = getPostTitle(soup)
 	print postTitle
+
 	postLocation = getPostLocation(soup)
 	print postLocation
-	postDistrict, postID = getPostDistrictID(soup)
-	print postDistrict, postID
 
+	postDistrict, postID = getPostDistrictID(soup)
+	print postID
+
+	postPhone = getPostPhoneNumber(postText)
+	print postPhone
 	
 URL = 'http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977'
 parsePost(URL)
