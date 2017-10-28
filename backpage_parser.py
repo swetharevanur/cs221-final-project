@@ -116,5 +116,11 @@ def parsePost(url):
 	postOtherAds = getOtherAdsByUser(soup)
 	print postOtherAds
 
-URL = 'http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977'
+URLs = ["http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977",
+		"http://losangeles.backpage.com/TherapeuticMassage/south-american-therapist-to-your-door/92268987",
+		"http://losangeles.backpage.com/TherapeuticMassage/40-intoxicating-colombian-and-asian-chicks-will-oil-you-til-your-toes-curl-310-849-4388/121253938",
+		"http://losangeles.backpage.com/ElectronicsForSale/1-199-13-macbook-air-core-i7-2-2-8gb-ram-500ssd-latest-models/145134832",
+		"http://sf.backpage.com/TherapeuticMassage/and-call-me-today-650-246-0113-hot-sweet-asian-girl-outcall-only-and/48972132",
+		"http://losangeles.backpage.com/TherapeuticMassage/six-cute-asians-everyday-largest-spa-in-pasadena-seven-massage-rooms-open-late/143424287"]
+
 parsePost(URL)
