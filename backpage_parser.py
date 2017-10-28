@@ -8,6 +8,7 @@ import urllib
 from bs4 import BeautifulSoup
 import re
 import string
+import pandas as pd
 from util import stripPunctuation
 
 def getPostText(soup):
@@ -95,32 +96,56 @@ def parsePost(url):
 	for b in soup.findAll("br"):
 		b.extract()
 
+	# map parsed type to data
+	post = {}
+
 	postText = getPostText(soup)
-	print postText
+	post['postText'] = postText
+	# print postText
 
 	postMonth, postDay, postYear, postTime = getPostDate(soup)
-	print postMonth, postDay, postYear, postTime
+	post['postMonth'] = postMonth
+	post['postDay'] =  postDay 
+	post['postYear'] = postYear
+	post['postTime'] = postTime
+	# print postMonth, postDay, postYear, postTime
 
 	postTitle = getPostTitle(soup)
-	print postTitle
+	# print postTitle
 
 	postLocation = getPostLocation(soup)
-	print postLocation
+	post['postLocation'] = postLocation
+	# print postLocation
 
 	postDistrict, postID = getPostDistrictID(soup)
-	print postID
+	post['postDistrict'] = postDistrict
+	post['postID'] = postID
+	# print postID
 
 	postPhone = getPostPhoneNumber(postText)
-	print postPhone
+	post['postPhone'] = postPhone
+	# print postPhone
 
 	postOtherAds = getOtherAdsByUser(soup)
-	print postOtherAds
+	post['postOtherAds'] = postOtherAds
+	# print postOtherAds
+	return post
 
-URLs = ["http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977",
+def tabulate():
+	postData = []
+	for URL in URLS: 
+		parseData = parsePost(URL)
+		postData.append(parseData)
+	a = pd.DataFrame(postData)
+	print a
+
+def baseline 
+
+
+URLS = ["http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977",
 		"http://losangeles.backpage.com/TherapeuticMassage/south-american-therapist-to-your-door/92268987",
 		"http://losangeles.backpage.com/TherapeuticMassage/40-intoxicating-colombian-and-asian-chicks-will-oil-you-til-your-toes-curl-310-849-4388/121253938",
-		"http://losangeles.backpage.com/ElectronicsForSale/1-199-13-macbook-air-core-i7-2-2-8gb-ram-500ssd-latest-models/145134832",
-		"http://sf.backpage.com/TherapeuticMassage/and-call-me-today-650-246-0113-hot-sweet-asian-girl-outcall-only-and/48972132",
-		"http://losangeles.backpage.com/TherapeuticMassage/six-cute-asians-everyday-largest-spa-in-pasadena-seven-massage-rooms-open-late/143424287"]
+		"http://sf.backpage.com/TherapeuticMassage/and-call-me-today-650-246-0113-hot-sweet-asian-girl-outcall-only-and/48972132"]
 
-parsePost(URL)
+tabulate()
+
