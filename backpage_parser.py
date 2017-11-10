@@ -1,20 +1,24 @@
 # backpage_parser.py
 # HTML parser for a Backpages post (by URL)
 # Retrieves post text, date, title, location, ID, and phone number.
-# Author: Swetha Revanur
+# Authors: Swetha Revanur and Keanu Spies
 
 import nltk
+from nltk.tokenize.moses import MosesTokenizer
 import urllib
 from bs4 import BeautifulSoup
 import re
 import string
 import pandas as pd
 from util import stripPunctuation
+import openpyxl # to create xlsl spreadsheet from pandas
 
 def getPostText(soup):
 	dataToReturn = []
 	for paragraphs in soup.find("div", {"class" : "postingBody"}):
-		sentences = nltk.word_tokenize(paragraphs)
+		# moses for emojis
+		moses = nltk.tokenize.moses.MosesTokenizer() 
+		sentences = moses.tokenize(paragraphs)
 		if len(sentences) == 0:
 			continue
 		for word in sentences:
@@ -88,64 +92,31 @@ def getOtherAdsByUser(soup):
 	return otherAds
  
 
-# doesn't handle non-unicode emoji characters
 def parsePost(url):
 	information = urllib.urlopen(url).read()
-	soup = BeautifulSoup(information)
+	soup = BeautifulSoup(information, "html.parser")
 	# remove line breaks
 	for b in soup.findAll("br"):
+		if "Post" in b.get_text().split():
+			continue
 		b.extract()
-
-	# map parsed type to data
+	# map data 
 	post = {}
-
-	postText = getPostText(soup)
-	post['postText'] = postText
-	# print postText
-
-	postMonth, postDay, postYear, postTime = getPostDate(soup)
-	post['postMonth'] = postMonth
-	post['postDay'] =  postDay 
-	post['postYear'] = postYear
-	post['postTime'] = postTime
-	# print postMonth, postDay, postYear, postTime
-
-	postTitle = getPostTitle(soup)
-	# print postTitle
-
-	postLocation = getPostLocation(soup)
-	post['postLocation'] = postLocation
-	# print postLocation
-
-	postDistrict, postID = getPostDistrictID(soup)
-	post['postDistrict'] = postDistrict
-	post['postID'] = postID
-	# print postID
-
-	postPhone = getPostPhoneNumber(postText)
-	post['postPhone'] = postPhone
-	# print postPhone
-
-	postOtherAds = getOtherAdsByUser(soup)
-	post['postOtherAds'] = postOtherAds
-	# print postOtherAds
+	post['postText'] = getPostText(soup)
+	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
+	post["postTitle"] = getPostTitle(soup)
+	post['postLocation'] = getPostLocation(soup)
+	post['postDistrict'], post['postID'] = getPostDistrictID(soup)
+	post['postPhone'] = getPostPhoneNumber(post['postText'])
+	post['postOtherAds'] = getOtherAdsByUser(soup)
 	return post
 
-def tabulate():
+def tabulate(URLS):
 	postData = []
 	for URL in URLS: 
 		parseData = parsePost(URL)
 		postData.append(parseData)
+	# store
 	a = pd.DataFrame(postData)
-	print a
-
-def baseline 
-
-
-URLS = ["http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977",
-		"http://losangeles.backpage.com/TherapeuticMassage/south-american-therapist-to-your-door/92268987",
-		"http://losangeles.backpage.com/TherapeuticMassage/40-intoxicating-colombian-and-asian-chicks-will-oil-you-til-your-toes-curl-310-849-4388/121253938",
-		"http://sf.backpage.com/TherapeuticMassage/and-call-me-today-650-246-0113-hot-sweet-asian-girl-outcall-only-and/48972132"]
-
-tabulate()
-
+	a.to_excel("data.xlsx") # for excel spreadsheet
+	# a.to_csv("data.csv") # for csv 
