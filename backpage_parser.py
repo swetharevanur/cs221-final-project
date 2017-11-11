@@ -102,6 +102,10 @@ def parsePost(url):
 		b.extract()
 	# map data 
 	post = {}
+	# page not found Error 535
+	if soup.find("div", {"class" : "postingBody"}) is None: 
+		return None
+
 	post['postText'] = getPostText(soup)
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
@@ -115,8 +119,9 @@ def tabulate(URLS):
 	postData = []
 	for URL in URLS: 
 		parseData = parsePost(URL)
-		postData.append(parseData)
-	# store
+		if parseData is not None:
+			postData.append(parseData)
 	a = pd.DataFrame(postData)
 	a.to_excel("data.xlsx") # for excel spreadsheet
 	# a.to_csv("data.csv") # for csv 
+	

@@ -11,34 +11,38 @@ import string
 from util import stripPunctuation
 from backpage_parser import * 
 
-# URLS = [ "http://losangeles.backpage.com/WomenSeekMen/323-750-8882-asian-anywhere-out-to-you-asian-sandy-hot/119134783",
-# 		"http://losangeles.backpage.com/SportsEquipForSale/1-400-ruger-precision-in-308-win-and-6-5-creedmoor/140762717",
-# 		"http://losangeles.backpage.com/SportsEquipForSale/home-protection-nij-level-3a-and-3-venture-ballistic-shields/96659002",
-# 		"http://losangeles.backpage.com/TherapeuticMassage/south-american-therapist-to-your-door/92268987",
-# 		"http://losangeles.backpage.com/AppliancesForSale/over-15-years-refrigerator-fixer-24-hrs-emergency-store-3106972751-same-day-nights-also/99071977",
-# 		"http://losangeles.backpage.com/TherapeuticMassage/40-intoxicating-colombian-and-asian-chicks-will-oil-you-til-your-toes-curl-310-849-4388/121253938"]
-
-def getPostsInRegion(soup):
+def getPostsOnPage(soup):
 	urls = []
 	pattern = '\S*/\d{9}'	
 	for a in soup.findAll('a', attrs={'href': re.compile("^http://")}):
 		url = a['href']
 		if re.match(pattern, url) is not None:
 			if url not in urls:
-				# print url
 				urls.append(url)
 	return urls
 
-def main():
-	page = "http://losangeles.backpage.com/WomenSeekMen/"
+def getPagesFromRegion(soup, region):
+	urls = []
+	for a in soup.findAll('a', attrs={'href': re.compile("^http://")}):
+		url = a['href']
+		if "Disclaimer" in url:			
+			if url not in urls:
+				url = url[:url.rfind("?")]
+				url = re.sub("classifieds/Disclaimer", "", url)
+				urls.append(url)
+	return urls
 
-	information = urllib.urlopen(page).read()
+def getDataFromPagesInRegion():
+	region = "http://losangeles.backpage.com/"
+	information = urllib.urlopen(region).read()
 	soup = BeautifulSoup(information, "html.parser")
-
-	URLS = getPostsInRegion(soup)
+	pages = getPagesFromRegion(soup, region)
+	URLS = []
+	for page in pages:
+		page_information = urllib.urlopen(page).read()
+		page_soup = BeautifulSoup(page_information, "html.parser")
+		URLS.extend(getPostsOnPage(page_soup))
 	tabulate(URLS)
 
-def __init__():
-	main()
+getDataFromPagesInRegion()
 
-__init__()
