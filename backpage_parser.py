@@ -12,6 +12,7 @@ import string
 import pandas as pd
 from util import stripPunctuation
 import openpyxl # to create xlsl spreadsheet from pandas
+import time
 
 def getPostText(soup):
 	dataToReturn = []
@@ -104,8 +105,9 @@ def parsePost(url):
 	post = {}
 	# page not found Error 535
 	if soup.find("div", {"class" : "postingBody"}) is None: 
+		print url
 		return None
-
+	# populated map
 	post['postText'] = getPostText(soup)
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
@@ -118,10 +120,10 @@ def parsePost(url):
 def tabulate(URLS):
 	postData = []
 	for URL in URLS: 
+		time.sleep(1)
 		parseData = parsePost(URL)
 		if parseData is not None:
 			postData.append(parseData)
 	a = pd.DataFrame(postData)
 	a.to_excel("data.xlsx") # for excel spreadsheet
 	# a.to_csv("data.csv") # for csv 
-	
