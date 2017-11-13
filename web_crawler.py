@@ -23,16 +23,18 @@ def getPostsOnPage(soup):
 
 def getPagesFromRegion(soup, region):
 	urls = []
-	for i in range(4):
+	for i in range(1):
 		for a in soup.findAll('a', attrs={'href': re.compile("^http://")}):
 			url = a['href']
-			if "Disclaimer" in url:			
-				if url not in urls:
+			if url not in urls:
+				if "Disclaimer" in url:		
 					# Pulls out all of the classifieds:
 					# /Dating, /MenSeekMen, /MenSeekWomen, /WomenSeekWomen, /WomenSeekMen, /Transgender
 					url = url[:url.rfind("?")]
 					url = re.sub("classifieds/Disclaimer", "", url) 
 					url += "?page=" + str(i)
+					urls.append(url)
+				if "TherapeuticMassage" in url:
 					urls.append(url)
 	return urls
 

@@ -120,7 +120,6 @@ def parsePost(url):
 def tabulate(URLS):
 	postData = []
 	for URL in URLS: 
-		time.sleep(1)
 		parseData = parsePost(URL)
 		if parseData is not None:
 			postData.append(parseData)
