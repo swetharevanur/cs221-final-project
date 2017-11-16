@@ -1,5 +1,5 @@
-
-emojis = { "\xe2\x99\x8e" : "libra",
+EMOJIS = { 
+"\xe2\x99\x8e" : "libra",
 "\xe2\x99\x8e" : "libra",
 "\xe2\x8f\xb0" : "alarm_clock",
 "\xe2\x8f\xb3" : "hourglass_with_flowing_sand",
