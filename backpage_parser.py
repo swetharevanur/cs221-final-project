@@ -10,21 +10,16 @@ from bs4 import BeautifulSoup
 import re
 import string
 import pandas as pd
-from util import stripPunctuation
+from util import stripPunctuation, stripAlpha, stripTags
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
 
 def getPostText(soup):
 	dataToReturn = []
-	for paragraphs in soup.find("div", {"class" : "postingBody"}):
-		# moses for emojis
-		moses = nltk.tokenize.moses.MosesTokenizer() 
-		sentences = moses.tokenize(paragraphs)
-		if len(sentences) == 0:
-			continue
-		for word in sentences:
-			dataToReturn.append(word)
-	return dataToReturn
+	for paragraph in soup.find("div", {"class" : "postingBody"}):
+		paragraph = stripTags(str(paragraph))
+		dataToReturn.append(paragraph)
+	return ' '.join(dataToReturn)
 
 
 def getPostDate(soup):
@@ -73,9 +68,10 @@ def getPostDistrictID(soup):
 def getPostPhoneNumber(tokenizedText):
 	phoneNo = []
 	pattern = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
-	for word in tokenizedText:
+	for word in tokenizedText.split():
 		if re.match(pattern, word) is not None:
 			word = stripPunctuation(word)
+			word = stripAlpha(word)
 			if word not in phoneNo:
 				phoneNo.append(word)
 	return ' '.join(phoneNo)
@@ -100,14 +96,15 @@ def parsePost(url):
 	for b in soup.findAll("br"):
 		if "Post" in b.get_text().split():
 			continue
-		b.extract()
+		b.replace_with(" ")
+
 	# map data 
 	post = {}
 	# page not found Error 535
 	if soup.find("div", {"class" : "postingBody"}) is None: 
-		print url
+		print url		
 		return None
-	# populated map
+	# populated map8
 	post['postText'] = getPostText(soup)
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
