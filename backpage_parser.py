@@ -13,10 +13,14 @@ import pandas as pd
 from util import stripPunctuation, stripAlpha, stripTags
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
+from emoji import replaceEmojis
 
 def getPostText(soup):
 	dataToReturn = []
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
+		
+		print paragraph
+		paragraph = replaceEmojis(paragraph)
 		paragraph = stripTags(str(paragraph))
 		dataToReturn.append(paragraph)
 	return ' '.join(dataToReturn)
@@ -104,7 +108,7 @@ def parsePost(url):
 	if soup.find("div", {"class" : "postingBody"}) is None: 
 		print url		
 		return None
-	# populated map8
+	# populated map
 	post['postText'] = getPostText(soup)
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
@@ -123,3 +127,5 @@ def tabulate(URLS):
 	a = pd.DataFrame(postData)
 	a.to_excel("data.xlsx") # for excel spreadsheet
 	# a.to_csv("data.csv") # for csv 
+
+tabulate(['http://losangeles.backpage.com/MenSeekWomen/lets-have-fun-new-ebony-in-town/148274157'])
