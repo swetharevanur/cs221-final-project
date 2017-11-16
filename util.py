@@ -2,6 +2,7 @@
 # Helper functions used in parsing, preprocessing, etc.
 # Author: Swetha Revanur and Keanu Spies
 
+import re
 import string
 
 # removes all punctuation

@@ -1,12 +1,11 @@
 # -*- encoding: utf-8-*-
-# pip install emoji
 
 import util
 import re
 from emoji_dict import EMOJIS
 import emoji as emojilibrary
 
-# TODO: eee<word> and e<word>e<word>e
+# TODO: eee<word> and e<word>e<word>e // DONE
 
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
@@ -20,7 +19,7 @@ def emojiTokenizer(s):
 	
 	# finds indexes of unicode backslashes
 	backslashIndexes = [m.start() for m in re.finditer(r'\\', byteOrdering)]
-	
+
 	for i in range(len(backslashIndexes)):
 		index = backslashIndexes[i]
 		if i == len(backslashIndexes) - 1:
@@ -28,21 +27,27 @@ def emojiTokenizer(s):
 			break
 		nextindex = backslashIndexes[i + 1]
 		sen += ' ' + byteOrdering[index:nextindex].decode('unicode-escape')
+
+	for i in range(len(sen)):
+		if sen[i].isalnum():
+			sen = sen[:i] + ' ' + sen[i:]
+			break
+
 	return sen
 
-print emojiTokenizer("back😂🍅🐒")
-
-# def replaceEmojis(s):	
-# 	new_words = []
-# 	words = s.split()
-# 	print words
-# 	for word in words:
-# 		if word in EMOJIS:
-# 			new_words.append(EMOJIS[word])	
-# 		else:
-# 			new_words.append(word)
-
-# 	return ' '.join(new_words)
+# replaces all emojis in a string with keywords associated with each emoji
+def replaceEmojis(s):	
+	new_words = []	
+	s = s.encode('utf8')
+	s = emojiTokenizer(s)
+	s = s.encode('utf8')
+	words = s.split()
+	for word in words:
+		if word in EMOJIS:
+			new_words.append(EMOJIS[word])	
+		else:
+			new_words.append(word)
+	return ' '.join(new_words)
 
 # def replaceEmojis(s):	
 # 	new_words = []
@@ -71,4 +76,6 @@ print emojiTokenizer("back😂🍅🐒")
 # 				new_words.append(word)
 
 # 	return ' '.join(new_words)
+
+# print emojiTokenizer("😂back🍅🐒7⃣")
 

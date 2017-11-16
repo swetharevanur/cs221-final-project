@@ -1,3 +1,4 @@
+# -*- encoding: utf-8-*-
 # backpage_parser.py
 # HTML parser for a Backpages post (by URL)
 # Retrieves post text, date, title, location, ID, and phone number.
@@ -13,13 +14,16 @@ import pandas as pd
 from util import stripPunctuation, stripAlpha, stripTags
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
-from emoji import replaceEmojis
+from emoji_parse import replaceEmojis
 
 def getPostText(soup):
 	dataToReturn = []
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
-		print paragraph
+		# replace emojis in text with key-words
 		paragraph = replaceEmojis(paragraph)
+		# remove excess newline chars
+		paragrah = paragraph.strip()
+		# remove tags such as <b>	
 		paragraph = stripTags(str(paragraph))
 		dataToReturn.append(paragraph)
 	return ' '.join(dataToReturn)
@@ -45,6 +49,7 @@ def getPostTitle(soup):
 	result = ""
 	for line in soup.find("a", {"class" : "h1link"}):
 		result += line.get_text()
+	result = replaceEmojis(result)
 	return result.strip()
 
 
@@ -109,6 +114,7 @@ def parsePost(url):
 		return None
 	# populated map
 	post['postText'] = getPostText(soup)
+	print post['postText']	
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
 	post['postLocation'] = getPostLocation(soup)
