@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8-*-
 # pip install emoji
 
 import util
@@ -6,47 +6,69 @@ import re
 from emoji_dict import EMOJIS
 import emoji as emojilibrary
 
-def replaceEmojis(s):	
-	new_words = []
-	words = s.split()
-	print words
-	for i in range(len(words)):
-		word = words[i]	
-		print word	
-		if text_has_emoji(word):
-			print 'yes'
-			emoji_list = word.split('\\')
-			for emoji in emoji_list:
-				if '\\' + emoji in EMOJIS:
-					new_words.append(EMOJIS[emoji])	
-				else:
-					new_words.append(word)
+# TODO: eee<word> and e<word>e<word>e
 
-		else:
-			if word in EMOJIS:
-				new_words.append(EMOJIS[word])	
-			else:
-				new_words.append(word)
+# pads emojis that are consecutive without intermediate characters
+def emojiTokenizer(s):
+	# converts bytes to unicode
+	byteOrdering = s.decode('utf8').encode('unicode-escape')
+	
+	# removes alphabetic character
+	index = byteOrdering.find('\\')
+	sen = byteOrdering[:index]
+	byteOrdering = byteOrdering[index:]
+	
+	# finds indexes of unicode backslashes
+	backslashIndexes = [m.start() for m in re.finditer(r'\\', byteOrdering)]
+	
+	for i in range(len(backslashIndexes)):
+		index = backslashIndexes[i]
+		if i == len(backslashIndexes) - 1:
+			sen += ' ' + byteOrdering[index:].decode('unicode-escape')
+			break
+		nextindex = backslashIndexes[i + 1]
+		sen += ' ' + byteOrdering[index:nextindex].decode('unicode-escape')
+	return sen
 
-	return ' '.join(words)
+print emojiTokenizer("back😂🍅🐒")
 
-def text_has_emoji(text):
-    for character in text:
-        if character in emojilibrary.UNICODE_EMOJI:
-            return True    
-        return False
-
-# def emoji_list():
-# 	apos = '"'
-# 	print 'emoji_dict = { '# 	i = 0
-# 	for uni, emoji in emoji_dict.iteritems():
-# 		if i == 0:
-# 			print 'emoji_dict = { ' + apos + str(uni)  + apos + ' : ' + apos + '_'.join(emoji.split()) + apos + ','		if i < 841:
-# 			print apos + str(uni)  + apos + ' : ' + apos + '_'.join(emoji.split()) + apos + ','
+# def replaceEmojis(s):	
+# 	new_words = []
+# 	words = s.split()
+# 	print words
+# 	for word in words:
+# 		if word in EMOJIS:
+# 			new_words.append(EMOJIS[word])	
 # 		else:
-# 			print apos + str(uni)  + apos + ' : ' + apos + '_'.join(emoji.split()) + apos		
-# 		i += 1
-# 	print '}'
+# 			new_words.append(word)
 
-print replaceEmojis('back\xf0\x9f\x9b\x85')
+# 	return ' '.join(new_words)
+
+# def replaceEmojis(s):	
+# 	new_words = []
+# 	words = s.split()
+# 	for i in range(len(words)):
+# 		word = words[i]	
+		
+# 		if not word.isalpha():
+# 			true_word = ''
+# 			for char in word:
+# 				if char.isalpha():
+# 					true_word += char
+# 				else
+# 					break
+		
+# 			word = word[word.find(true_word) + len(true_word):]
+# 			for key, value in EMOJIS.iteritems():
+# 				if 
+
+# 			new_words.append(EMOJIS[word])	
+					
+# 		else:
+# 			if word in EMOJIS:
+# 				new_words.append(EMOJIS[word])	
+# 			else:
+# 				new_words.append(word)
+
+# 	return ' '.join(new_words)
 

@@ -18,7 +18,6 @@ from emoji import replaceEmojis
 def getPostText(soup):
 	dataToReturn = []
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
-		
 		print paragraph
 		paragraph = replaceEmojis(paragraph)
 		paragraph = stripTags(str(paragraph))
