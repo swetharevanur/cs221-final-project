@@ -25,7 +25,7 @@ def getPostText(soup):
 		# replace emojis in text with key-words
 		# paragraph = replaceEmojis(paragraph)
 		# remove excess newline chars
-		# paragrah = str(paragraph).strip()
+		paragraph = str(paragraph).strip()
 		# remove tags such as <b>	
 		paragraph = stripTags(str(paragraph))
 		dataToReturn.append(paragraph)
@@ -79,12 +79,13 @@ def getPostDistrictID(soup):
 def getPostPhoneNumber(tokenizedText):
 	phoneNo = []
 	pattern = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
-	for word in tokenizedText.split():
-		if re.match(pattern, word) is not None:
-			word = stripPunctuation(word)
-			word = stripAlpha(word)
-			if word not in phoneNo:
-				phoneNo.append(word)
+	phoneNumbers = re.findall(pattern, tokenizedText) 
+	if phoneNumbers is not None:
+		for phoneNumber in phoneNumbers:
+			phoneNumber = stripPunctuation(phoneNumber)
+			phoneNumber = ''.join(phoneNumber.split(" "))
+			if phoneNumber not in phoneNo:
+				phoneNo.append(phoneNumber)
 	return ' '.join(phoneNo)
 
 
@@ -123,6 +124,7 @@ def parsePost(url):
 	post['postLocation'] = getPostLocation(soup)
 	post['postDistrict'], post['postID'] = getPostDistrictID(soup)
 	post['postPhone'] = getPostPhoneNumber(post['postText'])
+	# print post['postPhone']
 	post['postOtherAds'] = getOtherAdsByUser(soup)
 	return post
 
