@@ -5,8 +5,6 @@
 # Retrieves post text, date, title, location, ID, and phone number.
 # Authors: Swetha Revanur and Keanu Spies
 
-
-
 import nltk
 from nltk.tokenize.moses import MosesTokenizer
 import urllib
