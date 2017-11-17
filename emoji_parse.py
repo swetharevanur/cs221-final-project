@@ -1,8 +1,10 @@
+# -*- encoding: utf-8-*-
+
 # emoji_parse.py
 # Parser to identify emojis in text, convert to readable format, and pad with spaces
 # Authors: Swetha Revanur and Keanu Spies
 
-# -*- encoding: utf-8-*-
+
 
 import util
 import re

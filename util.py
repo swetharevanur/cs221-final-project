@@ -1,8 +1,10 @@
+# -*- encoding: utf-8-*-
+
 # util.py
 # Helper functions used in parsing, preprocessing, etc.
 # Author: Swetha Revanur and Keanu Spies
 
-# -*- encoding: utf-8-*-
+
 
 import re
 import string

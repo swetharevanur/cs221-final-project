@@ -1,9 +1,11 @@
+# -*- encoding: utf-8-*-
+
 # backpage_parser.py
 # HTML parser for a Backpages post (by URL)
 # Retrieves post text, date, title, location, ID, and phone number.
 # Authors: Swetha Revanur and Keanu Spies
 
-# -*- encoding: utf-8-*-
+
 
 import nltk
 from nltk.tokenize.moses import MosesTokenizer
