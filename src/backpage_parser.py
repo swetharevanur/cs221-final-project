@@ -1,5 +1,3 @@
-# -*- encoding: utf-8-*-
-
 # backpage_parser.py
 # HTML parser for a Backpages post (by URL)
 # Retrieves post text, date, title, location, ID, and phone number.
@@ -15,20 +13,21 @@ import pandas as pd
 from util import stripPunctuation, stripAlpha, stripTags
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
-from emoji_parse import replaceEmojis
+import copy
+# from emoji_parse import replaceEmojis
 
-def getPostText(soup):
+def getPostText(soup, hasPostingBody):
 	dataToReturn = []
-	for paragraph in soup.find("div", {"class" : "postingBody"}):
-		# replace emojis in text with key-words
-		# paragraph = replaceEmojis(paragraph)
-		# remove excess newline chars
-		paragraph = str(paragraph).strip()
-		# remove tags such as <b>	
-		paragraph = stripTags(str(paragraph))
-		dataToReturn.append(paragraph)
-	return ' '.join(dataToReturn)
+	# if hasPostingBody:
+	# 	tag = "postingBody"
+	# else:
+	# 	tag = "mainBody"
 
+	for paragraph in soup.find("div", {"class" : "postingBody"}):
+		p = unicode(paragraph)
+		p = stripTags(p)
+		dataToReturn.append(p)
+	return ' '.join(dataToReturn)
 
 def getPostDate(soup):
 	result = ""
@@ -45,14 +44,11 @@ def getPostDate(soup):
 		time = int(time) + 1200
 	return month, day, year, time
 
-
 def getPostTitle(soup):
 	result = ""
 	for line in soup.find("a", {"class" : "h1link"}):
 		result += line.get_text()
-	# result = replaceEmojis(result)
 	return result.strip()
-
 
 def getPostLocation(soup):
 	result = ""
@@ -63,7 +59,6 @@ def getPostLocation(soup):
 		result += line.split("Location:", 1)[1]
 	return result.strip()
 
-
 def getPostDistrictID(soup):
 	result = ""
 	for line in soup.findAll("div", style = "padding-left:2em;"):
@@ -73,7 +68,6 @@ def getPostDistrictID(soup):
 		result += line.split("Post ID:", 1)[1]
 	return [result.split()[1].strip(), result.split()[0].strip()]
 		
-
 def getPostPhoneNumber(tokenizedText):
 	phoneNo = []
 	pattern = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
@@ -110,30 +104,42 @@ def parsePost(url):
 
 	# map data 
 	post = {}
+	
 	# page not found Error 535
-	if soup.find("div", {"class" : "postingBody"}) is None: 
-		print url		
+	hasPostingBody = True
+	if soup.find("div", {"class" : "postingBody"}) is None:
+		# global errorCounter 
+		# errorCounter += 1
+		# print url
 		return None
+		# if soup.find("div", {"class" : "mainBody"}) is None: 
+		# 	print url		
+		# 	return None
+		# hasPostingBody = False
+
+	
 	# populated map
-	post['postText'] = getPostText(soup)
-	# print post['postText']	
+	post['postText'] = getPostText(soup, hasPostingBody)
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
 	post['postLocation'] = getPostLocation(soup)
 	post['postDistrict'], post['postID'] = getPostDistrictID(soup)
 	post['postPhone'] = getPostPhoneNumber(post['postText'])
-	# print post['postPhone']
 	post['postOtherAds'] = getOtherAdsByUser(soup)
 	return post
 
-def tabulate(URLS):
+def tabulate(URLS, batch):
 	postData = []
+	global errorCounter
+	errorCounter = 0
 	for URL in URLS: 
 		parseData = parsePost(URL)
 		if parseData is not None:
 			postData.append(parseData)
-	a = pd.DataFrame(postData)
-	a.to_excel("data.xlsx") # for excel spreadsheet
-	# a.to_csv("data.csv") # for csv 
+	url_df = pd.DataFrame(postData)
+	filename = "../data/postbatch" + batch + ".csv"
+	# a.to_excel() # for excel spreadsheet
+	# print "URL PARSE FAILED " + errorCounter
+	url_df.to_csv(filename, index=False) # for csv 
 
-tabulate(['http://losangeles.backpage.com/TherapeuticMassage/blissful-goddess-with-loving-hands/122215198'])
+# tabulate(['http://losangeles.backpage.com/TherapeuticMassage/blissful-goddess-with-loving-hands/122215198'])

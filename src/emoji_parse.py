@@ -4,8 +4,6 @@
 # Parser to identify emojis in text, convert to readable format, and pad with spaces
 # Authors: Swetha Revanur and Keanu Spies
 
-
-
 import util
 import re
 from emoji_dict import EMOJIS
@@ -53,34 +51,3 @@ def replaceEmojis(s):
 		else:
 			new_words.append(word)
 	return ' '.join(new_words)
-
-# def replaceEmojis(s):	
-# 	new_words = []
-# 	words = s.split()
-# 	for i in range(len(words)):
-# 		word = words[i]	
-		
-# 		if not word.isalpha():
-# 			true_word = ''
-# 			for char in word:
-# 				if char.isalpha():
-# 					true_word += char
-# 				else
-# 					break
-		
-# 			word = word[word.find(true_word) + len(true_word):]
-# 			for key, value in EMOJIS.iteritems():
-# 				if 
-
-# 			new_words.append(EMOJIS[word])	
-					
-# 		else:
-# 			if word in EMOJIS:
-# 				new_words.append(EMOJIS[word])	
-# 			else:
-# 				new_words.append(word)
-
-# 	return ' '.join(new_words)
-
-# print emojiTokenizer("😂back🍅🐒7⃣").split(" ")
-
