@@ -2,11 +2,14 @@
 # Helper functions used in parsing, preprocessing, etc.
 # Author: Swetha Revanur and Keanu Spies
 
+# -*- encoding: utf-8-*-
+
 import re
 import string
 
 # removes all punctuation
 def stripPunctuation(s):
+	s = s.decode('unicode-escape').encode('utf8')
 	return s.translate(None, string.punctuation)
 
 # removes all alphabetical characters

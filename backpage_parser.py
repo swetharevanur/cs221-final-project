@@ -1,8 +1,9 @@
-# -*- encoding: utf-8-*-
 # backpage_parser.py
 # HTML parser for a Backpages post (by URL)
 # Retrieves post text, date, title, location, ID, and phone number.
 # Authors: Swetha Revanur and Keanu Spies
+
+# -*- encoding: utf-8-*-
 
 import nltk
 from nltk.tokenize.moses import MosesTokenizer
@@ -20,9 +21,9 @@ def getPostText(soup):
 	dataToReturn = []
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
 		# replace emojis in text with key-words
-		paragraph = replaceEmojis(paragraph)
+		# paragraph = replaceEmojis(paragraph)
 		# remove excess newline chars
-		paragrah = paragraph.strip()
+		# paragrah = str(paragraph).strip()
 		# remove tags such as <b>	
 		paragraph = stripTags(str(paragraph))
 		dataToReturn.append(paragraph)
@@ -49,7 +50,7 @@ def getPostTitle(soup):
 	result = ""
 	for line in soup.find("a", {"class" : "h1link"}):
 		result += line.get_text()
-	result = replaceEmojis(result)
+	# result = replaceEmojis(result)
 	return result.strip()
 
 
@@ -114,7 +115,7 @@ def parsePost(url):
 		return None
 	# populated map
 	post['postText'] = getPostText(soup)
-	print post['postText']	
+	# print post['postText']	
 	post['postMonth'], post['postDay'], post['postYear'], post['postTime'] = getPostDate(soup)
 	post["postTitle"] = getPostTitle(soup)
 	post['postLocation'] = getPostLocation(soup)
@@ -133,4 +134,4 @@ def tabulate(URLS):
 	a.to_excel("data.xlsx") # for excel spreadsheet
 	# a.to_csv("data.csv") # for csv 
 
-tabulate(['http://losangeles.backpage.com/MenSeekWomen/lets-have-fun-new-ebony-in-town/148274157'])
+tabulate(['http://losangeles.backpage.com/TherapeuticMassage/blissful-goddess-with-loving-hands/122215198'])

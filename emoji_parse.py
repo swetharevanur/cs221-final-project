@@ -1,11 +1,13 @@
+# emoji_parse.py
+# Parser to identify emojis in text, convert to readable format, and pad with spaces
+# Authors: Swetha Revanur and Keanu Spies
+
 # -*- encoding: utf-8-*-
 
 import util
 import re
 from emoji_dict import EMOJIS
 import emoji as emojilibrary
-
-# TODO: eee<word> and e<word>e<word>e // DONE
 
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
@@ -28,6 +30,7 @@ def emojiTokenizer(s):
 		nextindex = backslashIndexes[i + 1]
 		sen += ' ' + byteOrdering[index:nextindex].decode('unicode-escape')
 
+	# handles edge cases like eee<word> and e<word>e<word>e
 	for i in range(len(sen)):
 		if sen[i].isalnum():
 			sen = sen[:i] + ' ' + sen[i:]
@@ -77,5 +80,5 @@ def replaceEmojis(s):
 
 # 	return ' '.join(new_words)
 
-# print emojiTokenizer("😂back🍅🐒7⃣")
+# print emojiTokenizer("😂back🍅🐒7⃣").split(" ")
 
