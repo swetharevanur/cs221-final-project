@@ -1,4 +1,7 @@
 # data_collator.py
+# Given our set of excel files produced in the webcrawler
+# collates date into one excel file
+# Authors: Swetha Revanur and Keanu Spies
 
 import pandas as pd
 import glob
@@ -15,18 +18,6 @@ def importFilesAsDF():
 	    listOfData.append(df)
 	totalDataFrame = pd.concat(listOfData)
 
-	totalDataFrame.to_excel('total_file_list.xlsx', index=False)
-
-# def writeToExcel:
-
-# global total_df
-# total_df = pd.DataFrame()
-
-# def importFilesAsDF:
-# 	for i in range(1,65):
-# 		filename = 'data' + str(i) + '.xslx'
-# 		this_df = pd.read_excel(filename)
-
-
+	totalDataFrame.to_excel('../data/total_file_list.xlsx', index=False)
 
 importFilesAsDF()
