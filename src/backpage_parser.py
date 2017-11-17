@@ -91,7 +91,13 @@ def getOtherAdsByUser(soup):
 			postID = url[len(url) - 1]
 			otherAds.append(postID)
 	return otherAds
- 
+
+def getCategory(soup):
+	cookieCrumb = soup.find("div", {"id" : "cookieCrumb"})
+	categoryPath = cookieCrumb.findAll('a')
+	for span in categoryPath[len(categoryPath) - 1].findAll('span'):
+		span.extract()
+	return categoryPath[len(categoryPath) - 1].text
 
 def parsePost(url):
 	information = urllib.urlopen(url).read()
@@ -110,13 +116,12 @@ def parsePost(url):
 	if soup.find("div", {"class" : "postingBody"}) is None:
 		# global errorCounter 
 		# errorCounter += 1
-		# print url
+		print "No postingBody found for: " + url
 		return None
 		# if soup.find("div", {"class" : "mainBody"}) is None: 
 		# 	print url		
 		# 	return None
 		# hasPostingBody = False
-
 	
 	# populated map
 	post['postText'] = getPostText(soup, hasPostingBody)
@@ -126,20 +131,20 @@ def parsePost(url):
 	post['postDistrict'], post['postID'] = getPostDistrictID(soup)
 	post['postPhone'] = getPostPhoneNumber(post['postText'])
 	post['postOtherAds'] = getOtherAdsByUser(soup)
+	post['postCategory'] = getCategory(soup)
 	return post
 
 def tabulate(URLS, batch):
 	postData = []
-	global errorCounter
-	errorCounter = 0
 	for URL in URLS: 
 		parseData = parsePost(URL)
 		if parseData is not None:
 			postData.append(parseData)
+
 	url_df = pd.DataFrame(postData)
-	filename = "../data/postbatch" + batch + ".csv"
+	filename = "../data/postbatch" + str(batch) + ".xlsx"
 	# a.to_excel() # for excel spreadsheet
 	# print "URL PARSE FAILED " + errorCounter
-	url_df.to_csv(filename, index=False) # for csv 
+	url_df.to_excel(filename, index=False) # for csv 
 
-# tabulate(['http://losangeles.backpage.com/TherapeuticMassage/blissful-goddess-with-loving-hands/122215198'])
+# tabulate(['http://losangeles.backpage.com/events/would-you-like-to-buy-a-home-in-2013-use-your-tax-return-to-get-one/27953533'], 4)
