@@ -138,7 +138,7 @@ def generate_batch(batch_size, num_skips, skip_window):
   for i in range(batch_size // num_skips):
 	context_words = [w for w in range(span) if w != skip_window]
 	words_to_use = random.sample(context_words, num_skips)
-	for j, context_word in enumerate(words_to_use):
+	for j, context_word in e numerate(words_to_use):
 	  batch[i * num_skips + j] = buffer[skip_window]
 	  labels[i * num_skips + j, 0] = buffer[context_word]
 	if data_index == len(data):

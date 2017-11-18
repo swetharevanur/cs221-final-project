@@ -4,7 +4,7 @@
 
 from contraction_dict import CONTRACTIONS
 from stopwords import ENGL_STOP_WORDS
-from emoji_parse import replaceEmojis
+from emoji_parse import emojiTokenizer
 import re
 from util import stripPunctuation, stripTags
 
@@ -98,7 +98,7 @@ def preprocess(s):
 	text = stripPunctuation(text)
 	text = oneCharWordRemoval(text)
 	text = leetTranslator(text)
-	text = replaceEmojis(text)	
+	text = emojiTokenizer(text)	
 	return text
 
 # print text# print "\n"

@@ -1,3 +1,4 @@
+#! python3
 # -*- encoding: utf8 -*-
 
 # emoji_parse.py
@@ -7,7 +8,6 @@
 import util
 import re
 from emoji_dict import EMOJIS
-import emoji as emojilibrary
 
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
@@ -31,46 +31,32 @@ def emojiTokenizer(s):
 		sen += ' ' + byteOrdering[index:nextindex].decode('unicode-escape')
 
 	# handles edge cases like eee<word> and e<word>e<word>e
-	# sen = byteOrdering.decode('unicode-escape')
-	# for i in range(1, len(sen)):
-	# 	# if sen[i].isspace() or sen[i-1].isspace():
-	# 	# 	continue
-	# 	# if sen[i-1].isalnum() and not sen[i].isalnum():
-	# 	# 	sen = sen[:i] + ' ' + sen[i:]
-	# 	# 	continue
-	# 	# if not sen[i-1].isalnum() and sen[i].isalnum():
-	# 	# 	sen = sen[:i] + ' ' + sen[i:]
-	# 	# 	continue
-	# 	# print sen
-	# 	sen = sen[:i] + ' ' + sen[i:]
-	# 	i += 1
+	if sen: 
+		newSen = sen[0]
+		for i in range(1, len(sen)):
+			if sen[i].isalnum():
+				if not sen[i-1].isalnum() and not sen[i-1].isspace():
+					newSen += ' ' + sen[i]
+				else:
+					newSen += sen[i]	
+			else: 
+				newSen += sen[i]
 
-	# byteOrdering
-	print sen
-	newSen = ''
-	for i in range(1, len(sen)):
-		# print sen[i]
-		if sen[i].isspace():
-			newSen = sen[i]
-		elif sen[i].isalnum() and sen[i-1].isalnum():
-			newSen = sen[i]
-		else:
-			newSen = sen[i] + ' '
-
-	return newSen.decode('unicode-escape')
+		return newSen
+	return sen
 
 # replaces all emojis in a string with keywords associated with each emoji
-def replaceEmojis(s):	
-	new_words = []	
-	# s = s.encode('utf8')
-	s = emojiTokenizer(s)
-	s = s.encode('utf8')
-	words = s.split()
-	for word in words:
-		if word in EMOJIS:
-			new_words.append(EMOJIS[word])	
-		else:
-			new_words.append(word)
-	return ' '.join(new_words)
+# def replaceEmojis(s):	
+# 	new_words = []	
+# 	# s = s.encode('utf8')
+# 	s = emojiTokenizer(s)
+# 	s = s.encode('utf8')
+# 	words = s.split()
+# 	for word in words:
+# 		if word in EMOJIS:
+# 			new_words.append(EMOJIS[word])	
+# 		else:
+# 			new_words.append(word)
+# 	return ' '.join(new_words)
 
-print emojiTokenizer('ke🎀❤️🍅🐒🎀jjj💞lk👩🏽‍🎓k')
+# print emojiTokenizer('ke🎀❤️🍅🐒🎀jjj💞lk👩🏽‍🎓k')
