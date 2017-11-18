@@ -107,3 +107,10 @@ def preprocess(s):
 # print text
 # print "\n"
 # print preprocess(text)
+# with open('../data/small_test.txt', 'r') as myfile:
+# 	text=myfile.read().replace('\n', '')
+# print preprocess(text)
+
+
+
+
