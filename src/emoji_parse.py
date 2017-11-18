@@ -1,4 +1,4 @@
-# -*- encoding: utf-8-*-
+# -*- encoding: utf8 -*-
 
 # emoji_parse.py
 # Parser to identify emojis in text, convert to readable format, and pad with spaces
@@ -31,17 +31,38 @@ def emojiTokenizer(s):
 		sen += ' ' + byteOrdering[index:nextindex].decode('unicode-escape')
 
 	# handles edge cases like eee<word> and e<word>e<word>e
-	for i in range(len(sen)):
-		if sen[i].isalnum():
-			sen = sen[:i] + ' ' + sen[i:]
-			break
+	# sen = byteOrdering.decode('unicode-escape')
+	# for i in range(1, len(sen)):
+	# 	# if sen[i].isspace() or sen[i-1].isspace():
+	# 	# 	continue
+	# 	# if sen[i-1].isalnum() and not sen[i].isalnum():
+	# 	# 	sen = sen[:i] + ' ' + sen[i:]
+	# 	# 	continue
+	# 	# if not sen[i-1].isalnum() and sen[i].isalnum():
+	# 	# 	sen = sen[:i] + ' ' + sen[i:]
+	# 	# 	continue
+	# 	# print sen
+	# 	sen = sen[:i] + ' ' + sen[i:]
+	# 	i += 1
 
-	return sen
+	# byteOrdering
+	print sen
+	newSen = ''
+	for i in range(1, len(sen)):
+		# print sen[i]
+		if sen[i].isspace():
+			newSen = sen[i]
+		elif sen[i].isalnum() and sen[i-1].isalnum():
+			newSen = sen[i]
+		else:
+			newSen = sen[i] + ' '
+
+	return newSen.decode('unicode-escape')
 
 # replaces all emojis in a string with keywords associated with each emoji
 def replaceEmojis(s):	
 	new_words = []	
-	s = s.encode('utf8')
+	# s = s.encode('utf8')
 	s = emojiTokenizer(s)
 	s = s.encode('utf8')
 	words = s.split()
@@ -51,3 +72,5 @@ def replaceEmojis(s):
 		else:
 			new_words.append(word)
 	return ' '.join(new_words)
+
+print emojiTokenizer('ke🎀❤️🍅🐒🎀jjj💞lk👩🏽‍🎓k')

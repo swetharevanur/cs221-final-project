@@ -7,7 +7,7 @@ import string
 
 # removes all punctuation
 def stripPunctuation(s):
-	s = s.encode('utf8')
+	# s = s.encode('utf8')
 	return s.translate(None, string.punctuation)
 
 # removes all alphabetical characters
