@@ -81,10 +81,13 @@ def leetTranslator(s):
 				prevLetter = word[letterIndex - 1]
 				nextLetter = word[letterIndex + 1]
 			if currLetter.isdigit():
-				if prevLetter == None and nextLetter.isalpha():
-					word = word[:letterIndex] + replaceNum(currLetter) + word[letterIndex + 1:]
-				elif nextLetter == None and prevLetter.isalpha():
-					word = word[:letterIndex] + replaceNum(currLetter) + word[letterIndex + 1:]
+
+				if prevLetter == None and nextLetter != None:
+					if nextLetter.isalpha():
+						word = word[:letterIndex] + replaceNum(currLetter) + word[letterIndex + 1:]
+				elif nextLetter == None and prevLetter != None: 
+					if prevLetter.isalpha():
+						word = word[:letterIndex] + replaceNum(currLetter) + word[letterIndex + 1:]
 				elif prevLetter.isalpha() or nextLetter.isalpha(): 
 					word = word[:letterIndex] + replaceNum(currLetter) + word[letterIndex + 1:]
 		translatedStr.append(word)
@@ -98,7 +101,7 @@ def preprocess(s):
 	text = stripPunctuationHyphen(text)
 	text = oneCharWordRemoval(text)
 	text = leetTranslator(text)
-	text = replaceEmojis(text)
+	# text = replaceEmojis(text)
 	return text
 
 # print text

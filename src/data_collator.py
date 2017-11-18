@@ -8,10 +8,11 @@ import glob
 import openpyxl
 import xlrd
 from preprocessing import preprocess
+import math
 
 def importFilesAsDF(totalDataFrame):
-	pathToFIles =r'../data' # use your path
-	fileNames = glob.glob(pathToFIles + "/postbatch*.xlsx")
+	pathToFiles =r'../data/raw' # use your path
+	fileNames = glob.glob(pathToFiles + "/postbatch*.xlsx")
 	
 	listOfData = []
 	for fileName in fileNames:
@@ -23,12 +24,15 @@ def importFilesAsDF(totalDataFrame):
 
 def preprocessDF(totalDataFrame):
 	for i in range(totalDataFrame.shape[0]):
+	# for i in range(160,162):
 		currentText = totalDataFrame.iat[i,8]
 		preprocessedText = preprocess(currentText)
-		totalDataFrame.set_value(i, 'postText', preprocessedText)
+		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postText')] = preprocessedText
+		
 		currentTitle = totalDataFrame.iat[i,10]
+		if isinstance(currentTitle, float): continue
 		preprocessedTitle = preprocess(currentTitle)
-		totalDataFrame.set_value(i, 'postTitle', preprocessedTitle)
+		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postTitle')] = preprocessedTitle
 
 def exportDFtoExcel(totalDataFrame):
 	totalDataFrame.to_excel('../data/total_file_list.xlsx', index=False)

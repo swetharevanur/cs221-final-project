@@ -142,7 +142,7 @@ def tabulate(URLS, batch):
 			postData.append(parseData)
 
 	url_df = pd.DataFrame(postData)
-	filename = "../data/postbatch" + str(batch) + ".xlsx"
+	filename = "../data/raw/postbatch" + str(batch) + ".xlsx"
 	# a.to_excel() # for excel spreadsheet
 	# print "URL PARSE FAILED " + errorCounter
 	url_df.to_excel(filename, index=False) # for csv 
