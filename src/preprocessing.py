@@ -4,9 +4,10 @@
 
 from contraction_dict import CONTRACTIONS
 from stopwords import ENGL_STOP_WORDS
+from emoji_parse import replaceEmojis
 import re
 
-text = "Wouldn't you like to start or end your day with a relaxing massage before heading off to your final destination? Is your work week very stressful? I have just the relaxing tranquil private environment that can ease you through the rest of your day. I use nice high quality products, always fresh clean sheets and towels, a warm shower along with a very comfortable massage table. Now let me also say, I'm equally at ease whether you wish to be draped or whether you're more comfortable being totally natural. The room is lit by soft candlelight and soothing soft music to lull you into a dreamlike state, and best of all, I'm NEVER rush. My studio located just minutes from LAX, with plenty of street parking. As a certified professional CMT, Im train in many massage specialties, but I bet you would benefit the most from my mixer of Lomi Lomi, Swedish and Deep Tissues to help work out your body stress area. This is a service designed specially with you in mind, but please be aware this IS a private Independent facility, I am unable to accommodated walk-in appointment; please schedule your appointment with at least 2-hours notice. ARE YOU COMING FROM OUT-OF-TOWN You can schedule before your flight with my online confidential schedule form (see below for details)."
+# text = "Wouldn't you like to start or end your day with a relaxing massage before heading off to your final destination? Is your work week very stressful? I have just the relaxing tranquil private environment that can ease you through the rest of your day. I use nice high quality products, always fresh clean sheets and towels, a warm shower along with a very comfortable massage table. Now let me also say, I'm equally at ease whether you wish to be draped or whether you're more comfortable being totally natural. The room is lit by soft candlelight and soothing soft music to lull you into a dreamlike state, and best of all, I'm NEVER rush. My studio located just minutes from LAX, with plenty of street parking. As a certified professional CMT, Im train in many massage specialties, but I bet you would benefit the most from my mixer of Lomi Lomi, Swedish and Deep Tissues to help work out your body stress area. This is a service designed specially with you in mind, but please be aware this IS a private Independent facility, I am unable to accommodated walk-in appointment; please schedule your appointment with at least 2-hours notice. ARE YOU COMING FROM OUT-OF-TOWN You can schedule before your flight with my online confidential schedule form (see below for details)."
 
 # convert string to lowercase
 def casefolding(s):
@@ -97,8 +98,9 @@ def preprocess(s):
 	text = stripPunctuationHyphen(text)
 	text = oneCharWordRemoval(text)
 	text = leetTranslator(text)
+	text = replaceEmojis(text)
 	return text
 
-print text
-print "\n"
-print preprocess(text)
+# print text
+# print "\n"
+# print preprocess(text)
