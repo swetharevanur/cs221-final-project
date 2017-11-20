@@ -1,4 +1,3 @@
-#! python3
 # -*- encoding: utf8 -*-
 
 # emoji_parse.py

@@ -23,24 +23,27 @@ def importFilesAsDF(totalDataFrame):
 	return totalDataFrame
 
 def preprocessDF(totalDataFrame):
+	fullfile = ''
 	for i in range(totalDataFrame.shape[0]):
 	# for i in range(160,162):
 		currentText = totalDataFrame.iat[i,8]
-		preprocessedText = preprocess(currentText)
+		preprocessedText = preprocess(currentText)		
+		fullfile += ' ' + preprocessedText
 		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postText')] = preprocessedText
 		
 		currentTitle = totalDataFrame.iat[i,10]
 		if isinstance(currentTitle, float): continue
 		preprocessedTitle = preprocess(currentTitle)
 		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postTitle')] = preprocessedTitle
+	return fullfile
 
 def exportDFtoExcel(totalDataFrame):
 	totalDataFrame.to_excel('../data/total_file_list.xlsx', index=False)
-
+	
 def __init__():
 	totalDataFrame = pd.DataFrame()
 	totalDataFrame = importFilesAsDF(totalDataFrame)
-	preprocessDF(totalDataFrame)
+	fullfile = preprocessDF(totalDataFrame)
 	exportDFtoExcel(totalDataFrame)
 
 __init__()

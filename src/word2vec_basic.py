@@ -62,17 +62,18 @@ import tensorflow as tf
 #     data = tf.compat.as_str(f.read(f.namelist()[0])).split()
 #   return data
 
-filename = "../data/raw/postbatch1.xlsx"
+filename = "../data/total_file_list.xlsx"
 
 # # Step 1: Read the data into a list of strings.
 def read_data(filename):
   df = pd.read_excel(filename)
   text = df['postText'].values # numpy.ndarray type
-  data = tf.compat.as_str("".join(text)).split()
+  # ','.join(str(v) for v in value_list)/
+  data = tf.compat.as_str("".join(unicode(s) for s in text)).split()
   toDelete = []
   for stringIndex in xrange(len(data)):
-	string = data[stringIndex]
-	if string.isdigit(): 
+  	string = data[stringIndex]
+  	if string.isdigit():
 		toDelete.append(stringIndex)
 		continue
 	elif not string:
@@ -84,7 +85,7 @@ def read_data(filename):
   # return tf.compat.as_str(data).split()
 
 vocabulary = read_data(filename)
-print('Data size', len(vocabulary))
+
 
 # Step 2: Build the dictionary and replace rare words with UNK token.
 vocabulary_size = 5000
@@ -138,13 +139,14 @@ def generate_batch(batch_size, num_skips, skip_window):
   for i in range(batch_size // num_skips):
 	context_words = [w for w in range(span) if w != skip_window]
 	words_to_use = random.sample(context_words, num_skips)
-	for j, context_word in e numerate(words_to_use):
-	  batch[i * num_skips + j] = buffer[skip_window]
-	  labels[i * num_skips + j, 0] = buffer[context_word]
+	for j, context_word in enumerate(words_to_use):
+		# print(buffer[skip_window])
+		# print(skip_window)
+	  	batch[i * num_skips + j] = buffer[skip_window]
+	  	labels[i * num_skips + j, 0] = buffer[context_word]
 	if data_index == len(data):
-	  # buffer[:] = data[:span]
 	  for word in data[:span]:
-   		buffer.append(data)
+		buffer.extend(data)
 	  data_index = span
 	else:
 	  buffer.append(data[data_index])
@@ -267,6 +269,10 @@ with tf.Session(graph=graph) as session:
 
 # Step 6: Visualize the embeddings.
 
+words = ['love', 'massage', 'asian', 'young', 'sexy', 'erotic', \
+		'hot', 'deep', 'auto', 'oil', 'repair', 'pretty',\
+		'real', 'body', 'amazing', 'pussy', 'fun', 'petite'\
+		'skinny', 'dick', 'sweet', 'estate', 'cash', 'local']
 
 # pylint: disable=missing-docstring
 # Function to draw visualization of distance between embeddings.
@@ -276,10 +282,11 @@ def plot_with_labels(low_dim_embs, labels, filename):
   for i, label in enumerate(labels):
 	x, y = low_dim_embs[i, :]
 	plt.scatter(x, y)
-	plt.annotate(label,
+	plt.annotate(label.decode('utf8').encode('unicode-escape'),
 				 xy=(x, y),
-				 xytext=(5, 2),
+				 xytext=(5, 2),		 
 				 textcoords='offset points',
+				 # fontname = 'Apple Color Emoji',
 				 ha='right',
 				 va='bottom')
 
@@ -287,6 +294,9 @@ def plot_with_labels(low_dim_embs, labels, filename):
 
 try:
   # pylint: disable=g-import-not-at-top
+  from matplotlib import rcParams
+  rcParams['font.family'] = 'normal'
+  rcParams['font.sans-serif'] = ['Apple Color Emoji']
   from sklearn.manifold import TSNE
   import matplotlib.pyplot as plt
 
