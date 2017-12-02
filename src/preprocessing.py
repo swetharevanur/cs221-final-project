@@ -91,24 +91,24 @@ def leetTranslator(s):
 
 	return ' '.join(translatedStr)
 
-def stripNumbers(s):
-	return ''.join([i for i in s if not i.isdigit()])
+def stripPhoneNumbers(s):
+	regex_sub = re.sub(r'(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})', ' ', s)
+	return regex_sub
 
-def preprocess(s):		
-	text = casefolding(s)
-	text = expandContractions(text)
-	# text = stripStopWords(text)
-	text = stripTags(text)
+def preprocess(s):
+	text = stripTags(s)
+	text = casefolding(text) # working
+	text = expandContractions(text) 
+	text = stripStopWords(text)
+	text = stripPhoneNumbers(text)
 	text = stripPunctuation(text)
-	# text = oneCharWordRemoval(text)
+	text = oneCharWordRemoval(text)
 	# text = leetTranslator(text)
-	text = emojiTokenizer(text)	
+	text = emojiTokenizer(text)	# working
 	text = ' '.join(text.split())
-	text = stripNumbers(text)
 	return text
 
-# print text# print "\n"
-# print preprocess(text)
-# with open('../data/small_test.txt', 'r') as myfile:
+# with open('./small_test.txt', 'r') as myfile:
 # 	text=myfile.read().replace('\n', '')
-# print preprocess(text)
+# preprocess(text)
+

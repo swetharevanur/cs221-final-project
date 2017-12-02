@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 import re
 import string
 import pandas as pd
-from util import stripPunctuation, stripAlpha, stripTags
+from util import stripPunctuation, stripAlpha, stripTags, stripPunctuationWithoutSpace
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
 import copy
@@ -25,7 +25,7 @@ def getPostText(soup, hasPostingBody):
 
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
 		p = unicode(paragraph)
-		p = stripTags(p)
+		# p = stripTags(p)
 		dataToReturn.append(p)
 	return ' '.join(dataToReturn)
 
@@ -35,11 +35,11 @@ def getPostDate(soup):
 		result += line.split("Posted:", 1)[1]
 	result.split(' ')
 	full_date = result.strip().split(' ')
-	month = stripPunctuation(full_date[1])
-	day = stripPunctuation(full_date[2])
-	year = stripPunctuation(full_date[3])
-	time = stripPunctuation(full_date[4])
-	ampm = stripPunctuation(full_date[5])
+	month = stripPunctuationWithoutSpace(full_date[1])
+	day = stripPunctuationWithoutSpace(full_date[2])
+	year = stripPunctuationWithoutSpace(full_date[3])
+	time = stripPunctuationWithoutSpace(full_date[4])
+	ampm = stripPunctuationWithoutSpace(full_date[5])
 	if ampm == "PM":
 		time = int(time) + 1200
 	return month, day, year, time
@@ -147,4 +147,5 @@ def tabulate(URLS, batch):
 	# print "URL PARSE FAILED " + errorCounter
 	url_df.to_excel(filename, index=False) # for csv 
 
-# tabulate(['http://losangeles.backpage.com/events/would-you-like-to-buy-a-home-in-2013-use-your-tax-return-to-get-one/27953533'], 4)
+tabulate(['http://losangeles.backpage.com/TherapeuticMassage/new-9-3-latina-girls-50-1hr-50-1hr-grand-opening/136704963',
+	'http://losangeles.backpage.com/TherapeuticMassage/asian-sexy-anywhere-out-to-you-new-face-fantastic-626-722-5855/119050048'], 90)

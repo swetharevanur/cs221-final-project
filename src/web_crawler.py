@@ -24,9 +24,11 @@ def getPostsOnPage(soup):
 
 def getPagesFromRegion(soup, region):
 	urls = set()
-	sampleCategories = ["/MusicianWanted/", "/events/", "/real-estate-wanted/", "/AccountingJobs/", \
-		"/Childcare/", "/Farm/", "/FurnitureForSale/", "/AutoServices/", "/AutosForSale/", "/MiscJobs/", \
-		"/RentalsWanted/", "/Roommates/", "/HomeImprovement/", "/CommercialForRent/", "/ToolsForSale/", "TherapeuticMassage"]
+	sampleCategories = ["TherapeuticMassage"]
+
+	# "/MusicianWanted/", "/events/", "/real-estate-wanted/", "/AccountingJobs/", \
+	# 	"/Childcare/", "/Farm/", "/FurnitureForSale/", "/AutoServices/", "/AutosForSale/", "/MiscJobs/", \
+	# 	"/RentalsWanted/", "/Roommates/", "/HomeImprovement/", "/CommercialForRent/", "/ToolsForSale/", "TherapeuticMassage"]
 	for i in range(10):
 		for a in soup.findAll('a', attrs={'href': re.compile("^http://")}):
 			url = a['href']

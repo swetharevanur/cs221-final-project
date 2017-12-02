@@ -11,11 +11,14 @@ from emoji_dict import EMOJIS
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
 	# converts bytes to unicode
-	byteOrdering = s.decode('utf8').encode('unicode-escape')
+	byteOrdering = s.encode('unicode-escape')
 	
 	# removes alphabetic character
 	index = byteOrdering.find('\\')
-	sen = byteOrdering[:index]
+	if index == -1:
+		sen = byteOrdering
+	else:
+		sen = byteOrdering[:index]
 	byteOrdering = byteOrdering[index:]
 	
 	# finds indexes of unicode backslashes
@@ -32,7 +35,8 @@ def emojiTokenizer(s):
 	# handles edge cases like eee<word> and e<word>e<word>e
 	if sen: 
 		newSen = sen[0]
-		for i in range(1, len(sen)):
+		sentenceLength = len(sen)
+		for i in range(1, sentenceLength):
 			if sen[i].isalnum():
 				if not sen[i-1].isalnum() and not sen[i-1].isspace():
 					newSen += ' ' + sen[i]
@@ -40,7 +44,6 @@ def emojiTokenizer(s):
 					newSen += sen[i]	
 			else: 
 				newSen += sen[i]
-
 		return newSen
 	return sen
 
@@ -57,5 +60,4 @@ def emojiTokenizer(s):
 # 		else:
 # 			new_words.append(word)
 # 	return ' '.join(new_words)
-
 # print emojiTokenizer('ke🎀❤️🍅🐒🎀jjj💞lk👩🏽‍🎓k')
