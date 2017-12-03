@@ -14,9 +14,4 @@ import emoji
 key_emojis = ['🌹','🏵','🍒','🌸','💗','✈','👑']
 
 def textHasEmoji(text):
-	for word in text.split():
-		if word in key_emojis:
-			return 1
-	return 0
-
-# text = preprocess('   New 💋36DDD JaNessa ❤💦💋❤100% ReaL❤💋 💦Your Home/HoteL 💋💦❤ SenSuaL Rubs ❤💦BooBs FeTish 💋FuN❤424.219.1104')
+	return 1 if any(key_emoji in text.encode('utf8') for key_emoji in key_emojis) else 0

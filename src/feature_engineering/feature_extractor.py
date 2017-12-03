@@ -1,3 +1,4 @@
+# -*- encoding: utf8 -*-
 from entropy import shannonEntropy
 from voice import isThirdPerson, hasFirstPersonPlural
 from keyword_features import containsCountriesOfInterest, multipleVictimsAdvertised, victimWeightMentioned,presenceOfPhrasesAndWords,presenceOfSpa
@@ -18,4 +19,4 @@ def featureExtractor(text):
 	sparseVec[9] = textHasEmoji(text) #'textHasEmoji'
 	sparseVec.extend(tf_idf(text)) # TF-IDF top n vals
 	return sparseVec
-# print featureExtractor('hey rose 22 years old taiwanese girl 5 6" 102 lbs 34d 24 34 call only text only')
+# print featureExtractor('❌ 👑 ❌ 🌑 ❌ ❌ 🌑 ❌ 👑 ❌ 🌑 ❌ nuru slides ❌ 🌑 ❌ 👑 ❌ 🌑 ❌ 38 s ❌ 🌑 ❌ 👑 ❌ 🌑 ❌ 【 come my ckd00r 】 26 love cater all needs prostate bubble baths nuru hugging kissing amp caressing hamy lee')
