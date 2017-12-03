@@ -26,11 +26,11 @@ df = importFilesAsDF()
 doc_set = []
 
 def isFloat(string):
-    try:
-        float(string)
-        return True
-    except ValueError:
-        return False
+	try:
+		float(string)
+		return True
+	except ValueError:
+		return False
 
 for i, row in df.iterrows():
 	text = df.iat[i,8]
