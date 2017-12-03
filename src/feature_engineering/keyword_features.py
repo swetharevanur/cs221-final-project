@@ -16,9 +16,12 @@ def multipleVictimsAdvertised(text):
 	return 1 if any(keyword in text for keyword in multiple_victims_keywords) else 0
 
 def victimWeightMentioned(text):
-	m = re.match(r'(?P<weight>\d+) (lbs)', text)
+	m = re.match(r'(?P<weight>\d+)\s*(lb)', text)
+	if not m: return 0
 	return 1 if int(m.group('weight')) <= weight_boundary else 0
 
 def containsWebsite(text):
 	return 1 if 'http' in text else 0
+
+print victimWeightMentioned('120lb')
 
