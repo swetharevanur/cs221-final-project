@@ -34,4 +34,4 @@ def presenceOfSpa(text):
 # def containsWebsite(text):
 # 	return 1 if 'http' in text else 0
 
-print presenceOfPhrasesAndWords('in calp')
+# print presenceOfPhrasesAndWords('in calp')

@@ -29,5 +29,6 @@ def shannonEntropy(data, unit='natural'):
 	for p in probs:
 		if p > 0.:
 			ent -= p * math.log(p, base[unit])
-
-	return ent
+	if ent >= 4:
+		return 1
+	return 0

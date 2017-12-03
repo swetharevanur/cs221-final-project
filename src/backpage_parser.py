@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 import re
 import string
 import pandas as pd
-from util import stripPunctuation, stripAlpha, stripTags, stripPunctuationWithoutSpace
+from util import stripPunctuation, stripAlpha, stripTags, stripPunctuationWithoutSpace, stripBreaks, stripUIB
 import openpyxl # to create xlsl spreadsheet from pandas
 import time
 import copy
@@ -25,6 +25,8 @@ def getPostText(soup, hasPostingBody):
 
 	for paragraph in soup.find("div", {"class" : "postingBody"}):
 		p = unicode(paragraph)
+		p = stripBreaks(p)
+		p = stripUIB(p)
 		# p = stripTags(p)
 		dataToReturn.append(p)
 	return ' '.join(dataToReturn)
@@ -136,16 +138,16 @@ def parsePost(url):
 
 def tabulate(URLS, batch):
 	postData = []
-	for URL in URLS: 
+	for URL in URLS:
 		parseData = parsePost(URL)
 		if parseData is not None:
 			postData.append(parseData)
 
 	url_df = pd.DataFrame(postData)
-	filename = "../data/raw/postbatch" + str(batch) + ".xlsx"
-	# a.to_excel() # for excel spreadsheet
+	filename = "../data/raw/thirdpostbatch" + str(batch) + ".xlsx"
 	# print "URL PARSE FAILED " + errorCounter
-	url_df.to_excel(filename, index=False) # for csv 
+	url_df.to_excel(filename, index=False, encoding ='unicode-escape') # for csv 
 
-tabulate(['http://losangeles.backpage.com/TherapeuticMassage/new-9-3-latina-girls-50-1hr-50-1hr-grand-opening/136704963',
-	'http://losangeles.backpage.com/TherapeuticMassage/asian-sexy-anywhere-out-to-you-new-face-fantastic-626-722-5855/119050048'], 90)
+# tabulate(['http://losangeles.backpage.com/TherapeuticMassage/young-baba-massage-cute-and-hot-young-masseuses-great-fun-and-relaxation/146713767'], 9)
+# tabulate(['http://losangeles.backpage.com/TherapeuticMassage/new-9-3-latina-girls-50-1hr-50-1hr-grand-opening/136704963',
+# 'http://losangeles.backpage.com/TherapeuticMassage/asian-sexy-anywhere-out-to-you-new-face-fantastic-626-722-5855/119050048'], 90)

@@ -12,7 +12,7 @@ import math
 
 def importFilesAsDF(totalDataFrame):
 	pathToFiles =r'../data/raw' # use your path
-	fileNames = glob.glob(pathToFiles + "/secondpostbatch*.xlsx")
+	fileNames = glob.glob(pathToFiles + "/thirdpostbatch*.xlsx")
 	
 	listOfData = []
 	for fileName in fileNames:
@@ -38,7 +38,7 @@ def preprocessDF(totalDataFrame):
 	return fullfile
 
 def exportDFtoExcel(totalDataFrame):
-	totalDataFrame.to_excel('../data/second_total_file_list.xlsx', index=False)
+	totalDataFrame.to_excel('../data/third_total_file_list.xlsx', index=False)
 	
 def __init__():
 	totalDataFrame = pd.DataFrame()

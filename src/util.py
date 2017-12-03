@@ -28,3 +28,15 @@ def stripTags(s):
 def stripPunctuationWithoutSpace(s):
 	regex_sub = re.sub(r"[,.;@#?!&$()*-/\\\^+\|:]+", '', s)
 	return regex_sub
+
+def stripBreaks(s):
+	regex_sub = re.sub(r"<br>", ' ', s)
+	regex_sub = re.sub( '\s+', ' ', regex_sub ).strip()
+	regex_sub = re.sub(r"",' ', regex_sub)
+	return regex_sub
+
+def stripUIB(s):
+	regex_sub = re.sub(r"</?i>", ' ', s)
+	regex_sub = re.sub(r"</?u>", ' ', regex_sub)
+	regex_sub = re.sub(r"</?b>", ' ', regex_sub)
+	return regex_sub
