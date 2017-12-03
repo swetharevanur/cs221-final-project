@@ -1,3 +1,4 @@
+# -*- encoding: utf8 -*-
 # preprocessing.py
 # Cleans data that was fetched from Backpage
 # Author: Swetha Revanur and Keanu Spies

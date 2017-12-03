@@ -9,7 +9,7 @@ from emoji_dict import EMOJIS
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
 	# converts bytes to unicode
-	byteOrdering = s.decode('utf8').encode('unicode-escape')
+	byteOrdering = s.encode('unicode-escape')
 	
 	# removes alphabetic character
 	index = byteOrdering.find('\\')
