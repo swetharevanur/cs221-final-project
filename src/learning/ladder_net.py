@@ -203,6 +203,7 @@ with tf.control_dependencies([train_step]):
 
 print "===  Loading Data ==="
 mnist = input_data.read_data_sets("MNIST_data", n_labeled=num_labeled, one_hot=True)
+print type(mnist)
 
 saver = tf.train.Saver()
 

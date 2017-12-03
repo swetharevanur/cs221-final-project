@@ -6,10 +6,12 @@ from __future__ import print_function
 import gzip
 import os
 import urllib
-import numpy
+import numpy as np
+import glob
+import pandas as pd
 
-def importFilesAsDF(totalDataFrame):
-	pathToFiles =r'../data/raw' # use your path
+def importFilesAsDF():
+	pathToFiles =r'../../data/raw' # use your path
 	fileNames = glob.glob(pathToFiles + "/secondpostbatch*.xlsx")
 	
 	postList = []
@@ -20,27 +22,23 @@ def importFilesAsDF(totalDataFrame):
 	totalDataFrame = pd.concat(postList)
 	return totalDataFrame
 
-def _read32(bytestream):
-	dt = numpy.dtype(numpy.uint32).newbyteorder('>')
-	return numpy.frombuffer(bytestream.read(4), dtype=dt)[0]
+# def _read32(bytestream):
+# 	dt = numpy.dtype(numpy.uint32).newbyteorder('>')
+# 	return numpy.frombuffer(bytestream.read(4), dtype=dt)[0]
 
 
-def extract_images(filename):
-	"""Extract the images into a 4D uint8 numpy array [index, y, x, depth]."""
-	print('Extracting', filename)
-	with gzip.open(filename) as bytestream:
-		magic = _read32(bytestream)
-		if magic != 2051:
-			raise ValueError(
-					'Invalid magic number %d in MNIST image file: %s' %
-					(magic, filename))
-		num_images = _read32(bytestream)
-		rows = _read32(bytestream)
-		cols = _read32(bytestream)
-		buf = bytestream.read(rows * cols * num_images)
-		data = numpy.frombuffer(buf, dtype=numpy.uint8)
-		data = data.reshape(num_images, rows, cols, 1)
-		return data
+def extract_images(df):
+	"""Extract the file into a 4D numpy array [index, y, x, depth]."""
+	print('Extracting')
+	num_examples = len(df.columns) # one for each post
+	rows = len(df) # one for each feature
+	cols = 1 # column vector
+	data = np.zeros(num_examples * rows)
+	data = totalDataFrame.values
+	return data
+
+totalDataFrame = importFilesAsDF()
+data = extract_images(totalDataFrame)
 
 
 def dense_to_one_hot(labels_dense, num_classes=10):
