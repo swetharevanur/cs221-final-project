@@ -1,5 +1,3 @@
-# -*- encoding: utf8 -*-
-
 # emoji_parse.py
 # Parser to identify emojis in text, convert to readable format, and pad with spaces
 # Authors: Swetha Revanur and Keanu Spies
@@ -11,7 +9,7 @@ from emoji_dict import EMOJIS
 # pads emojis that are consecutive without intermediate characters
 def emojiTokenizer(s):
 	# converts bytes to unicode
-	byteOrdering = s.encode('unicode-escape')
+	byteOrdering = s.decode('utf8').encode('unicode-escape')
 	
 	# removes alphabetic character
 	index = byteOrdering.find('\\')
@@ -60,4 +58,3 @@ def emojiTokenizer(s):
 # 		else:
 # 			new_words.append(word)
 # 	return ' '.join(new_words)
-# print emojiTokenizer('ke🎀❤️🍅🐒🎀jjj💞lk👩🏽‍🎓k')
