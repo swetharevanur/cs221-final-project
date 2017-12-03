@@ -3,23 +3,11 @@
 # LDA topic-modeling to derive secondary feature vector
 # Authors: Swetha Revanur and Keanu Spies
 
-from nltk.tokenize.moses import MosesTokenizer
-from stop_words import get_stop_words
-from nltk.stem.porter import PorterStemmer
 from gensim import corpora, models
 import gensim
 import pandas as pd
 import glob
 import math
-
-tokenizer = MosesTokenizer(r'\w+')
-	
-# create sample documents
-doc_a = "Brocolli is good to eat. My brother likes to eat good brocolli, but not my mother."
-doc_b = "My mother spends a lot of time driving my brother around to baseball practice."
-doc_c = "Some health experts suggest that driving may cause increased tension and blood pressure."
-doc_d = "I often feel pressure to perform well at school, but my mother never seems to drive my brother to do better."
-doc_e = "Health professionals say that brocolli is good for your health." 
 
 def importFilesAsDF():
 	pathToFiles =r'../../data' # use your path
@@ -53,24 +41,12 @@ for i, row in df.iterrows():
 	currentText = text + title
 	doc_set.append(currentText)
 
-# compile sample documents into a list
-# doc_set = [doc_a, doc_b, doc_c, doc_d, doc_e]
-
 # list for tokenized documents in loop
 texts = []
-
-# print doc_set
 
 # loop through document list
 for doc in doc_set:
 	texts.append(doc.split())
-	# clean and tokenize document string
-	# raw = i.lower()
-	# tokens = tokenizer.tokenize(raw)
-	# add tokens to list
-	# texts.append(tokens)
-
-# print texts
 
 # turn our tokenized documents into a id <-> term dictionary
 dictionary = corpora.Dictionary(texts)
