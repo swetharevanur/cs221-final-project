@@ -3,7 +3,7 @@
 # first-person plural pronouns.
 # Authors: Swetha Revanur and Keanu Spies
 
-third_pov_keywords = ['he', 'him', 'his', 'she', 'her', 'hers', 'they']
+third_pov_keywords = ['he', 'him', 'his', 'she', 'her', 'hers', 'they', 'their', 'theirs']
 first_pov_keywords = ['we', 'our', 'ours']
 
 def isThirdPerson(s):
