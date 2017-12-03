@@ -18,4 +18,4 @@ def featureExtractor(text):
 	sparseVec[9] = textHasEmoji(text) #'textHasEmoji'
 	sparseVec.extend(tf_idf(text)) # TF-IDF top n vals
 	return sparseVec
-# featureExtractor('they went to the store with us')
+# print featureExtractor('hey rose 22 years old taiwanese girl 5 6" 102 lbs 34d 24 34 call only text only')

@@ -5,8 +5,8 @@
 
 import re
 
-countries_of_interest = ['china', 'vietnam', 'korea', 'thailand']
-multiple_victims_keywords = ['girls', 'women', 'men', 'boys', 'people', 'children']
+countries_of_interest = ['china', 'vietnam', 'korea', 'thailand', 'asian']
+multiple_victims_keywords = ['girls', 'women', 'men', 'boys', 'people', 'children', 'babes', 'dolls', 'masseuses']
 weight_boundary = 110
 word_phrases = ['young', 'fresh', 'new', 'new in town', 'new arrrival', 'open minded', 'petite', \
 'exotic', 'youthful', 'barely legal', 'virgin', 'tiny', 'incall','in call', 'new to the game', 'candy', ]
@@ -21,8 +21,9 @@ def multipleVictimsAdvertised(text):
 	return 1 if any(keyword in text for keyword in multiple_victims_keywords) else 0
 
 def victimWeightMentioned(text):
-	m = re.match(r'(?P<weight>\d+)\s*(lb)', text)
-	if not m: return 0
+	m = re.search(r'(?P<weight>\d+)\s*(lb)', text)
+	if not m: 
+		return 0
 	return 1 if int(m.group('weight')) <= weight_boundary else 0
 
 def presenceOfPhrasesAndWords(text):

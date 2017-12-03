@@ -26,15 +26,15 @@ def preprocessDF(totalDataFrame):
 	fullfile = ''
 	for i in range(totalDataFrame.shape[0]):
 	# for i in range(160,162):
-		currentText = totalDataFrame.iat[i,8]
-		preprocessedText = preprocess(currentText)		
-		fullfile += ' ' + preprocessedText
-		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postText')] = preprocessedText
-		
 		currentTitle = totalDataFrame.iat[i,10]
 		if isinstance(currentTitle, float): continue
 		preprocessedTitle = preprocess(currentTitle)
 		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postTitle')] = preprocessedTitle
+
+		currentText = totalDataFrame.iat[i,8]
+		preprocessedText = preprocessedTitle + ' ' + preprocess(currentText)		
+		fullfile += ' ' + preprocessedText
+		totalDataFrame.iloc[i, totalDataFrame.columns.get_loc('postText')] = preprocessedText
 	return fullfile
 
 def exportDFtoExcel(totalDataFrame):
