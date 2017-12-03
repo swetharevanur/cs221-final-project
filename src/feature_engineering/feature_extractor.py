@@ -17,4 +17,5 @@ def featureExtractor(text):
 	sparseVec[8] = presenceOfSpa(text) #'presenceOfSpa'
 	sparseVec[9] = textHasEmoji(text) #'textHasEmoji'
 	sparseVec.extend(tf_idf(text)) # TF-IDF top n vals
+	return sparseVec
 # featureExtractor('they went to the store with us')
