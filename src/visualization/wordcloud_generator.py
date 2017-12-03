@@ -8,8 +8,6 @@ import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 
-d = path.dirname(__file__)
-
 # import file
 def importFilesAsDF():
 	pathToFile =r'../../data' # use your path
@@ -17,7 +15,6 @@ def importFilesAsDF():
 	df = pd.read_excel(''.join(fileName)) # converts list to string
 	return df
 
-# read the relevant text
 df = importFilesAsDF()
 
 # util function
@@ -30,6 +27,7 @@ def isFloat(string):
 		return False
 
 doc_set = []
+# read the relevant text
 for i, row in df.iterrows():
 	text = df.iat[i,8]
 	title = df.iat[i,10]

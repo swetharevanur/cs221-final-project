@@ -31,22 +31,27 @@ library(tm)
 # read in files
 path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data/"
 setwd(path)
-fileNames = unlist(list.files(pattern = "second_total_file_working*.xlsx"))
+rm(df)
+fileNames = unlist(list.files(pattern = "second_total_list.xlsx"))
 print(fileNames)
+# fileName = "second_total_file_working*.xlsx"
 
 # declare empty dataframe
 columnNames = c("postCategory", "postDay", "postDistrict", "postID",
                 "postLocation", "postMonth", "postOtherAds", 
                 "postPhone", "postText", "postTime", "postTitle", "postYear")
 df <- data.frame(matrix(ncol = length(columnNames), nrow = 0), stringsAsFactors = FALSE)
+colnames(df) = columnNames
 
 # populate df
 for (fileName in fileNames) {
   fileName = toString(fileName)
   filePath = paste(path, fileName, sep = "")
-  fileDF = read.xls(filePath,sheet = 1,header = TRUE)
-  df = rbind(df, fileDF)
+  filedf = read.xls(filePath,sheet = 1,header = TRUE)
+  df = rbind(filedf)  
 }
+
+print(ncol(df))
 
 # add another column that is the concatenation of the title + text columns
 colsToPaste = c('postText', 'postTitle')

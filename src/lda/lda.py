@@ -11,15 +11,10 @@ import math
 
 def importFilesAsDF():
 	pathToFiles =r'../../data' # use your path
-	fileNames = glob.glob(pathToFiles + "/second_total_file_working*.xlsx")
+	fileName = pathToFiles + "/filtered_third_total_file_list.xlsx"
 	
-	postList = []
-	for fileName in fileNames:
-		df = pd.read_excel(fileName)
-		postList.append(df)
-
-	totalDataFrame = pd.concat(postList)
-	return totalDataFrame
+	df = pd.read_excel(fileName)
+	return df
 
 df = importFilesAsDF()
 
