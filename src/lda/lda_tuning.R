@@ -11,6 +11,8 @@
 # install.packages("RColorBrewer")
 # install.packages("wordcloud")
 # install.packages("ldatuning")
+# install.packages("gdata")
+# install.packages("tm")
 
 library(topicmodels)
 library(doParallel)
@@ -20,35 +22,52 @@ library(tidyverse)
 library(RColorBrewer)
 library(wordcloud)
 library(ldatuning)
+library(gdata)
+library(tm)
+
 # data("AssociatedPress", package="topicmodels")
 # full_data <- AssociatedPress
 
 # read in files
-path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data"
+path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data/"
 setwd(path)
-fileNames = list.files(pattern = "second_total_file_working*.xlsx")
+fileNames = unlist(list.files(pattern = "second_total_file_working*.xlsx"))
 print(fileNames)
 
+# declare empty dataframe
+columnNames = c("postCategory", "postDay", "postDistrict", "postID",
+                "postLocation", "postMonth", "postOtherAds", 
+                "postPhone", "postText", "postTime", "postTitle", "postYear")
+df <- data.frame(matrix(ncol = length(columnNames), nrow = 0), stringsAsFactors = FALSE)
+
+# populate df
 for (fileName in fileNames) {
-  print(fileNames)
+  fileName = toString(fileName)
+  filePath = paste(path, fileName, sep = "")
+  fileDF = read.xls(filePath,sheet = 1,header = TRUE)
+  df = rbind(df, fileDF)
 }
-  df = pd.read_excel(fileName)
-postList.append(df)
 
-totalDataFrame = pd.concat(postList)
+# add another column that is the concatenation of the title + text columns
+colsToPaste = c('postText', 'postTitle')
 
-print(full_data)
+# create a new column `x` with the three columns collapsed together
+df$mergedPost <- apply(df[, colsToPaste], 1, paste, collapse = " ")
 
-# system.time({
-#   tunes <- FindTopicsNumber(
-#     full_data,
-#     topics = c(1:10 * 10, 120, 140, 160, 180, 0:3 * 50 + 200),
-#     metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010"),
-#     method = "Gibbs",
-#     control = list(seed = 77),
-#     mc.cores = 4L,
-#     verbose = TRUE
-#   )
-# })
-# 
-# FindTopicsNumber_plot(tunes)
+corpus<-Corpus(VectorSource(c(df['mergedPost'])))
+
+full_data = DocumentTermMatrix(corpus)
+
+system.time({
+  tunes <- FindTopicsNumber(
+    full_data,
+    topics = c(1:10 * 10, 120, 140, 160, 180, 0:3 * 50 + 200),
+    metrics = c("Griffiths2004", "CaoJuan2009", "Arun2010"),
+    method = "Gibbs",
+    control = list(seed = 77),
+    mc.cores = 4L,
+    verbose = TRUE
+  )
+})
+
+FindTopicsNumber_plot(tunes)
