@@ -2,7 +2,7 @@
 # Semi-supervised support vector machine with Contrastive Pessimistic Likelihood Estimation.
 # Authors: Swetha Revanur and Keanu Spies
 
-from frameworks.SelfLearning import *
+# from frameworks.SelfLearning import *
 import sklearn
 import matplotlib
 import numpy as np
