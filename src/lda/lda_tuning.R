@@ -1,4 +1,4 @@
-# lda_tuning.py
+# lda_tuning.R
 # Computes optimal LDA hyperparamater (number of topics) 
 # by optimizing 3 metrics.
 # Authors: Swetha Revanur and Keanu Spies
@@ -20,9 +20,24 @@ library(tidyverse)
 library(RColorBrewer)
 library(wordcloud)
 library(ldatuning)
-data("AssociatedPress", package="topicmodels")
-full_data <- AssociatedPress
+# data("AssociatedPress", package="topicmodels")
+# full_data <- AssociatedPress
 
+# read in files
+path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data"
+setwd(path)
+fileNames = list.files(pattern = "second_total_file_working*.xlsx")
+print(fileNames)
+
+for (fileName in fileNames) {
+  print(fileNames)
+}
+  df = pd.read_excel(fileName)
+postList.append(df)
+
+totalDataFrame = pd.concat(postList)
+
+print(full_data)
 
 # system.time({
 #   tunes <- FindTopicsNumber(

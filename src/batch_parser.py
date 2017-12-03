@@ -14,7 +14,7 @@ with open('../data/url_list.csv', 'rb') as urlFile:
 		urls.extend(row)
 
 numBatches = len(urls)/100
-# numBatches = 1
+numBatches = 1
 for batch in range(numBatches):
 	tabulate(urls[batch*100: batch*100 + 100], batch + 1)
 	if batch != numBatches - 1:
