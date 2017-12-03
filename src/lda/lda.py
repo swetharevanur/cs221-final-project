@@ -41,9 +41,7 @@ for i, row in df.iterrows():
 	currentText = text + title
 	doc_set.append(currentText)
 
-# list for tokenized documents in loop
 texts = []
-
 # loop through document list
 for doc in doc_set:
 	texts.append(doc.split())
