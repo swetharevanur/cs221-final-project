@@ -77,15 +77,13 @@ class DataSet(object):
 			self._num_examples = 10000
 		else:
 			assert images.shape[0] == labels.shape[0], (
-					"images.shape: %s labels.shape: %s" % (images.shape,
-																								 labels.shape))
+					"images.shape: %s labels.shape: %s" % (images.shape, labels.shape))
 			self._num_examples = images.shape[0]
 
 			# Convert shape from [num examples, rows, columns, depth]
 			# to [num examples, rows*columns] (assuming depth == 1)
 			assert images.shape[3] == 1
-			images = images.reshape(images.shape[0],
-															images.shape[1] * images.shape[2])
+			images = images.reshape(images.shape[0], images.shape[1] * images.shape[2])
 			# Convert from [0, 255] -> [0.0, 1.0].
 			images = images.astype(numpy.float32)
 			images = numpy.multiply(images, 1.0 / 255.0)

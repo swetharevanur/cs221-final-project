@@ -1,20 +1,15 @@
 Script execution order:
 
-To generate a feature vector for each post:
-
-Advertisement Language Pattern:
-1. Run isThirdPerson() and hasFirstPersonPlural() from voice.py.
-2. Run shannonEntropy() from entropy.py
-
-Words and Phrases of Interest:
-3. 
-
-Countries of Interest:
-
-Multiple Victims Advertised:
-
-Victim Weight:
-
-Reference to Website or Spa Massage Therapy:
-
-Presence of Emojis:
+1. Run feature_extractor.py to generate a feature vector for each post consisting of:
+- Advertisement Language Pattern
+	- third-person voice
+	- first-person plural pronouns
+	- Shannon entropy
+	- n-grams with TF-IDF
+- Words and Phrases of Interest
+- Countries of Interest
+- Multiple Victims Advertised
+- Victim Weight
+- Reference to Spa or Massage Therapy
+- Presence of Emojis
+2. Run filter.py to filter out posts which have a zero feature vector.

@@ -1,0 +1,14 @@
+We referenced the following sources throughout our project:
+
+CODE -
+1. Wordcloud generation: https://github.com/amueller/word_cloud/blob/master/examples/simple.py
+2. Data formatting for LDA: https://cran.r-project.org/web/packages/tm/vignettes/tm.pdf
+3. TensorFlow implementation of Ladder networks: https://github.com/rinuboney/ladder
+
+TUTORIALS -
+1. Description of Ladder networks: http://rinuboney.github.io/2016/01/19/ladder-network.html
+2. LDA tuning: http://ellisp.github.io/blog/2017/01/05/topic-model-cv
+
+PAPERS -
+1. Predictive Patterns of Sex Trafficking Online: http://repository.cmu.edu/cgi/viewcontent.cgi?article=1153&context=hsshonors
+2. A Non-Parametric Learning Approach to Identify Online Human Trafficking: https://arxiv.org/pdf/1607.08691.pdf
