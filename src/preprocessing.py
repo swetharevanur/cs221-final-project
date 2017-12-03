@@ -99,13 +99,13 @@ def stripPhoneNumbers(s):
 def preprocess(s):
 	text = stripTags(s)
 	text = casefolding(text) # working
-	text = expandContractions(text) 
-	text = stripStopWords(text)
+	text = expandContractions(text)
 	text = stripPhoneNumbers(text)
 	text = stripPunctuation(text)
 	text = oneCharWordRemoval(text)
 	# text = leetTranslator(text)
 	text = emojiTokenizer(text)	# working
+	text = stripStopWords(text)
 	text = ' '.join(text.split())
 	return text
 

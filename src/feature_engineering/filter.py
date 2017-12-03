@@ -3,4 +3,7 @@
 # of the important binary features
 # Authors: Swetha Revanur and Keanu Spies
 
-from src.feature_engineering.feature_extractor import featureExtractor
+import sys
+sys.path.insert(0, '/path/to/application/app/folder')
+
+import file
