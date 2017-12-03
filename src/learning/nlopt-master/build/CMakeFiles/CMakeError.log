@@ -1,0 +1,31 @@
+Performing C SOURCE FILE Test HAVE_THREAD_LOCAL_STORAGE failed with the following output:
+Change Dir: /Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_688f6/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_688f6.dir/build.make CMakeFiles/cmTC_688f6.dir/build
+Building C object CMakeFiles/cmTC_688f6.dir/src.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -DHAVE_THREAD_LOCAL_STORAGE -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk   -o CMakeFiles/cmTC_688f6.dir/src.c.o   -c /Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp/src.c
+/Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp/src.c:2:28: error: parameter named 'tls' is missing
+    __declspec(thread) int tls;
+                           ^
+/Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp/src.c:4:9: error: parameter named 'main' is missing
+    int main(void) {
+        ^
+/Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp/src.c:4:19: error: expected ';' at end of declaration
+    int main(void) {
+                  ^
+                  ;
+/Users/KeanuSpies/Documents/2_Soph_2017/Fall/cs221/cs221-final-project/src/learning/nlopt-master/build/CMakeFiles/CMakeTmp/src.c:2:5: warning: type specifier missing, defaults to 'int' [-Wimplicit-int]
+    __declspec(thread) int tls;
+    ^
+1 warning and 3 errors generated.
+make[1]: *** [CMakeFiles/cmTC_688f6.dir/src.c.o] Error 1
+make: *** [cmTC_688f6/fast] Error 2
+
+Source file was:
+
+    __declspec(thread) int tls;
+
+    int main(void) {
+        return 0;
+    }
