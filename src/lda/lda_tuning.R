@@ -32,7 +32,7 @@ library(tm)
 path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data/"
 setwd(path)
 rm(df)
-fileNames = unlist(list.files(pattern = "second_total_list.xlsx"))
+fileNames = unlist(list.files(pattern = "second_total_list_working*.xlsx"))
 print(fileNames)
 # fileName = "second_total_file_working*.xlsx"
 
