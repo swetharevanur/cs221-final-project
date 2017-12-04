@@ -145,6 +145,7 @@ class SemiDataSet(object):
 				shuffled_indices = numpy.random.permutation(indices)
 				images = images[shuffled_indices]
 				labels = labels[shuffled_indices]
+				
 				y = numpy.array([numpy.arange(10)[l==1][0] for l in labels])
 				idx = indices[y==0][:5]
 				n_classes = y.max() + 1
@@ -185,6 +186,7 @@ def read_data_sets(train_dir, n_labeled = 100, fake_data=False, one_hot=False):
 
 	local_file = maybe_download(TRAIN_IMAGES, train_dir)
 	train_images = extract_images(local_file)
+	# (1700, 15, 1, 1)
 	print(numpy.shape(train_images))
 	print()
 	print()
@@ -219,5 +221,7 @@ def read_data_sets(train_dir, n_labeled = 100, fake_data=False, one_hot=False):
 	data_sets.train = SemiDataSet(train_images, train_labels, n_labeled)
 	data_sets.validation = DataSet(validation_images, validation_labels)
 	data_sets.test = DataSet(test_images, test_labels)
+
+	print(data_sets.train)
 
 	return data_sets

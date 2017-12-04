@@ -9,59 +9,96 @@ import urllib
 import numpy as np
 import glob
 import pandas as pd
+import math
 
-def importFilesAsDF():
-	pathToFiles =r'../../data/raw' # use your path
-	fileNames = glob.glob(pathToFiles + "/secondpostbatch*.xlsx")
-	
-	postList = []
-	for fileName in fileNames:
-		df = pd.read_excel(fileName)
-		postList.append(df)
-	
-	totalDataFrame = pd.concat(postList)
-	return totalDataFrame
+num_features = 7
+num_examples_total = 10
+num_labeled = 3
 
-# def _read32(bytestream):
-# 	dt = numpy.dtype(numpy.uint32).newbyteorder('>')
-# 	return numpy.frombuffer(bytestream.read(4), dtype=dt)[0]
+def importFilesAsDF(filename):
+	df = pd.read_excel(filename) # remove index?
+	return df
 
-def extract_images(df):
-	"""Extract the file into a 4D numpy array [index, y, x, depth]."""
-	print('Extracting')
-	num_examples = len(df.columns) # one for each post
-	rows = len(df) # one for each feature
+def loadDataSet(df):
+	return df.values.tolist()
+
+def extract_images(data_list):
+	"""Extract the file into a 4D np array [index, y, x, depth]."""
+	# totalDataFrame = importFilesAsDF(fileName)
+	# print('Extracting Training')
+	num_features = len(data_list[0])  # one for each feature
+	num_examples = len(data_list)# one for each post
 	cols = 1 # column vector
-	data = np.zeros(num_examples * rows)
-	data = totalDataFrame.values
+	data = np.zeros(num_examples * num_features)
+	data = data_list
+	# removes indices 
+	data = np.array([np.array(a[0:]) for a in data])
+	data = data.reshape(num_examples, num_features, cols, 1)
 	return data
 
-totalDataFrame = importFilesAsDF()
-data = extract_images(totalDataFrame)
-
-def dense_to_one_hot(labels_dense, num_classes=10):
+def dense_to_one_hot(labels_dense, num_classes=2):
 	"""Convert class labels from scalars to one-hot vectors."""
 	num_labels = labels_dense.shape[0]
-	index_offset = numpy.arange(num_labels) * num_classes
-	labels_one_hot = numpy.zeros((num_labels, num_classes))
+	index_offset = np.arange(num_labels) * num_classes
+	labels_one_hot = np.zeros((num_labels, num_classes))
 	labels_one_hot.flat[index_offset + labels_dense.ravel()] = 1
 	return labels_one_hot
 
-def extract_labels(filename, one_hot=False):
-	"""Extract the labels into a 1D uint8 numpy array [index]."""
-	print('Extracting', filename)
-	with gzip.open(filename) as bytestream:
-		magic = _read32(bytestream)
-		if magic != 2049:
-			raise ValueError(
-					'Invalid magic number %d in MNIST label file: %s' %
-					(magic, filename))
-		num_items = _read32(bytestream)
-		buf = bytestream.read(num_items)
-		labels = numpy.frombuffer(buf, dtype=numpy.uint8)
-		if one_hot:
-			return dense_to_one_hot(labels)
-		return labels
+def extract_labels(data_list, filename, one_hot=False):
+
+	# labeled_df = importFilesAsDF(filename)
+	# labeled_list = labeled_df.values.tolist()
+	# label_vector = []
+	# unlabeled_vector = []
+	# for i in range(len(data_list)):
+	# 	labeled = False
+	# 	for label in labeled_list:
+	# 		if data_list[i][0] in label[0]:
+	# 			labeled = True
+	# 			label_vector.append(label[1])
+	# 			break
+	# 	if not labeled:
+	# 		unlabeled_vector.append()
+	# 		label_vector.append(-1)
+
+	# labels = np.array(label_vector)
+	# print(labels)
+	# if one_hot:
+	# 	return dense_to_one_hot(labels)
+	# return labels
+
+	labeled_df = importFilesAsDF(filename)
+	labeled_list = labeled_df.values.tolist()
+
+	label_vector = []
+	labeled_X = []
+	unlabeled_X = []
+	unlabeled_vec = []
+
+	for i in range(len(data_list)):
+		labeled = False
+		for label in labeled_list:
+			if data_list[i][0] in label[0]:
+				labeled = True
+				label_vector.append(label[1])
+				labeled_X.append(data_list[i][1:])
+				break
+		if not labeled:
+			unlabeled_X.append(data_list[i][1:])
+			unlabeled_vec.append(0)
+
+	labeled_X.extend(unlabeled_X)
+	X = labeled_X
+	label_vector.extend(unlabeled_vec)
+	y = label_vector
+
+	labels = np.array(y)
+	# print(labels)
+	if one_hot:
+		return X, dense_to_one_hot(labels)
+
+	return X, labels
+	
 
 class DataSet(object):
 
@@ -78,8 +115,8 @@ class DataSet(object):
 			assert images.shape[3] == 1
 			images = images.reshape(images.shape[0], images.shape[1] * images.shape[2])
 			# Convert from [0, 255] -> [0.0, 1.0].
-			images = images.astype(numpy.float32)
-			images = numpy.multiply(images, 1.0 / 255.0)
+			images = images.astype(np.float32)
+			images = np.multiply(images, 1.0 / 255.0)
 		self._images = images
 		self._labels = labels
 		self._epochs_completed = 0
@@ -104,7 +141,7 @@ class DataSet(object):
 	def next_batch(self, batch_size, fake_data=False):
 		"""Return the next `batch_size` examples from this data set."""
 		if fake_data:
-			fake_image = [1.0 for _ in xrange(784)]
+			# fake_image = [1.0 for _ in xrange(num_features)]
 			fake_label = 0
 			return [fake_image for _ in xrange(batch_size)], [
 					fake_label for _ in xrange(batch_size)]
@@ -114,8 +151,8 @@ class DataSet(object):
 			# Finished epoch
 			self._epochs_completed += 1
 			# Shuffle the data
-			perm = numpy.arange(self._num_examples)
-			numpy.random.shuffle(perm)
+			perm = np.arange(self._num_examples)
+			np.random.shuffle(perm)
 			self._images = self._images[perm]
 			self._labels = self._labels[perm]
 			# Start next epoch
@@ -129,16 +166,17 @@ class SemiDataSet(object):
 		def __init__(self, images, labels, n_labeled):
 				self.n_labeled = n_labeled
 
-				# Unlabled DataSet
+				# Unlabeled DataSet
 				self.unlabeled_ds = DataSet(images, labels)
 
 				# Labeled DataSet
 				self.num_examples = self.unlabeled_ds.num_examples
-				indices = numpy.arange(self.num_examples)
-				shuffled_indices = numpy.random.permutation(indices)
+				indices = np.arange(self.num_examples)
+				shuffled_indices = np.random.permutation(indices)
 				images = images[shuffled_indices]
 				labels = labels[shuffled_indices]
-				y = numpy.array([numpy.arange(10)[l==1][0] for l in labels])
+				# needs to have a one in one of the things in the one hot
+				y = np.array([np.arange(2)[l==1][0] for l in labels])
 				idx = indices[y==0][:5]
 				n_classes = y.max() + 1
 				n_from_each_class = n_labeled / n_classes
@@ -156,10 +194,10 @@ class SemiDataSet(object):
 						labeled_images, labels = self.labeled_ds.next_batch(self.n_labeled)
 				else:
 						labeled_images, labels = self.labeled_ds.next_batch(batch_size)
-				images = numpy.vstack([labeled_images, unlabeled_images])
+				images = np.vstack([labeled_images, unlabeled_images])
 				return images, labels
 
-def read_data_sets(train_dir, n_labeled = 100, fake_data=False, one_hot=False):
+def read_data_sets(train_dir, n_labeled=10, fake_data=False, one_hot=False):
 	class DataSets(object):
 		pass
 	data_sets = DataSets()
@@ -175,19 +213,26 @@ def read_data_sets(train_dir, n_labeled = 100, fake_data=False, one_hot=False):
 	TEST_IMAGES = 't10k-images-idx3-ubyte.gz'
 	TEST_LABELS = 't10k-labels-idx1-ubyte.gz'
 	VALIDATION_SIZE = 0
+	# TEST_SIZE = int(math.floor(num_labeled/5))
+	TEST_SIZE = 2
 
-	local_file = maybe_download(TRAIN_IMAGES, train_dir)
-	train_images = extract_images(local_file)
-	print(train_images)
+	# local_file = maybe_download(TRAIN_LABELS, train_dir)
+	image_file = 'dummy_lda_output.xlsx'
+	data_set = loadDataSet(importFilesAsDF(image_file))
+	local_file = 'dummy_labeled_lda_output.xlsx'
 
-	local_file = maybe_download(TRAIN_LABELS, train_dir)
-	train_labels = extract_labels(local_file, one_hot=one_hot)
+	X, train_labels = extract_labels(data_set,local_file, one_hot=one_hot)
+	train_images = extract_images(X)
 
-	local_file = maybe_download(TEST_IMAGES, train_dir)
-	test_images = extract_images(local_file)
+	# local_file = maybe_download(TEST_IMAGES, train_dir)
+	# test_images = extract_images(local_file)
+	test_images = train_images[:TEST_SIZE]
+	train_images = train_images[TEST_SIZE:]
 
-	local_file = maybe_download(TEST_LABELS, train_dir)
-	test_labels = extract_labels(local_file, one_hot=one_hot)
+	# local_file = maybe_download(TEST_LABELS, train_dir)
+	# test_labels = extract_labels(local_file, one_hot=one_hot)
+	test_labels = train_labels[:TEST_SIZE]
+	train_labels = train_labels[TEST_SIZE:]
 
 	validation_images = train_images[:VALIDATION_SIZE]
 	validation_labels = train_labels[:VALIDATION_SIZE]

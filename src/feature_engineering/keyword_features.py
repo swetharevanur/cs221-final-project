@@ -5,7 +5,7 @@
 
 import re
 
-countries_of_interest = ['china', 'vietnam', 'korea', 'thailand', 'asian']
+countries_of_interest = ['china', 'vietnam', 'korea', 'thailand', 'asian'] #TODO: add emojis of country flags
 multiple_victims_keywords = ['girls', 'women', 'men', 'boys', 'people', 'children', 'babes', 'dolls', 'masseuses']
 weight_boundary = 110
 word_phrases = ['young', 'fresh', 'new', 'new in town', 'new arrrival', 'open minded', 'petite', \

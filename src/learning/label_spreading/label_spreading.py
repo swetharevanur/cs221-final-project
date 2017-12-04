@@ -64,11 +64,7 @@ def getXLabelVector(data_list, labeled_df):
 
 	return labeled_X, label_vector, unlabeled_data
 	
-# 	labeled_X.extend(unlabeled_X)
-# 	X = labeled_X
-# 	label_vector.extend(unlabeled_vector)
-# 	y = label_vector
-# 	return X,y,num_labels
+
 
 # def getXLabelVector(data_list, labeled_df):
 # 	labeled_list = labeled_df.values.tolist()

@@ -1,24 +1,28 @@
 import tensorflow as tf
-import input_data
-# import i_data
+# import input_data
+import import_data as input_data
+# import input_data
 import math
 import os
 import csv
 from tqdm import tqdm
 
-layer_sizes = [784, 1000, 500, 250, 250, 250, 10]
+num_features =  7 # 784 
+num_classes = 2 #10
 
-L = len(layer_sizes) - 1  # number of layers
+layer_sizes = [num_features, 1000, 500, 250, 250, 250, num_classes]
 
-num_examples = 60000
+L = len(layer_sizes) - 1  # number of layers7
+
+num_examples = 10 #60000 # 10
 num_epochs = 150
-num_labeled = 100
+num_labeled = 3 # 100 # 3
 
 starter_learning_rate = 0.02
 
 decay_after = 15  # epoch after which to begin learning rate decay
 
-batch_size = 100
+batch_size = 1 #100 # 3
 num_iter = (num_examples/batch_size) * num_epochs  # number of loop iterations
 
 inputs = tf.placeholder(tf.float32, shape=(None, layer_sizes[0]))
@@ -83,6 +87,8 @@ def encoder(inputs, noise_std):
 	# The data for labeled and unlabeled examples are stored separately
 	d['labeled'] = {'z': {}, 'm': {}, 'v': {}, 'h': {}}
 	d['unlabeled'] = {'z': {}, 'm': {}, 'v': {}, 'h': {}}
+	print "THIS IS H (ln86 of ladder):"
+	print h
 	d['labeled']['z'][0], d['unlabeled']['z'][0] = split_lu(h)
 	for l in range(1, L+1):
 		print "Layer ", l, ": ", layer_sizes[l-1], " -> ", layer_sizes[l]
@@ -136,6 +142,7 @@ def encoder(inputs, noise_std):
 
 print "=== Corrupted Encoder ==="
 y_c, corr = encoder(inputs, noise_std)
+# y_c is the result of the activation function
 
 print "=== Clean Encoder ==="
 y, clean = encoder(inputs, 0.0)  # 0.0 -> do not add noise
@@ -167,7 +174,7 @@ def g_gauss(z_c, u, size):
 # Decoder
 z_est = {}
 d_cost = []  # to store the denoising cost of all layers
-for l in range(L, -1, -1):
+for l in range(L, -1, -1): # L to 0
 	print "Layer ", l, ": ", layer_sizes[l+1] if l+1 < len(layer_sizes) else None, " -> ", layer_sizes[l], ", denoising cost: ", denoising_cost[l]
 	z, z_c = clean['unlabeled']['z'][l], corr['unlabeled']['z'][l]
 	m, v = clean['unlabeled']['m'].get(l, 0), clean['unlabeled']['v'].get(l, 1-1e-10)
@@ -231,25 +238,25 @@ print "=== Training ==="
 # print mnist.test.labels
 print "Initial Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False}), "%"
 
-# for i in tqdm(range(i_iter, num_iter)):
-# 	images, labels = mnist.train.next_batch(batch_size)
-# 	sess.run(train_step, feed_dict={inputs: images, outputs: labels, training: True})
-# 	if (i > 1) and ((i+1) % (num_iter/num_epochs) == 0):
-# 		epoch_n = i/(num_examples/batch_size)
-# 		if (epoch_n+1) >= decay_after:
-# 			# decay learning rate
-# 			# learning_rate = starter_learning_rate * ((num_epochs - epoch_n) / (num_epochs - decay_after))
-# 			ratio = 1.0 * (num_epochs - (epoch_n+1))  # epoch_n + 1 because learning rate is set for next epoch
-# 			ratio = max(0, ratio / (num_epochs - decay_after))
-# 			sess.run(learning_rate.assign(starter_learning_rate * ratio))
-# 		saver.save(sess, 'checkpoints/model.ckpt', epoch_n)
-# 		# print "Epoch ", epoch_n, ", Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs:mnist.test.labels, training: False}), "%"
-# 		with open('train_log', 'ab') as train_log:
-# 			# write test accuracy to file "train_log"
-# 			train_log_w = csv.writer(train_log)
-# 			log_i = [epoch_n] + sess.run([accuracy], feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False})
-# 			train_log_w.writerow(log_i)
+for i in tqdm(range(i_iter, num_iter)):
+	images, labels = mnist.train.next_batch(batch_size)
+	sess.run(train_step, feed_dict={inputs: images, outputs: labels, training: True})
+	if (i > 1) and ((i+1) % (num_iter/num_epochs) == 0):
+		epoch_n = i/(num_examples/batch_size)
+		if (epoch_n+1) >= decay_after:
+			# decay learning rate
+			# learning_rate = starter_learning_rate * ((num_epochs - epoch_n) / (num_epochs - decay_after))
+			ratio = 1.0 * (num_epochs - (epoch_n+1))  # epoch_n + 1 because learning rate is set for next epoch
+			ratio = max(0, ratio / (num_epochs - decay_after))
+			sess.run(learning_rate.assign(starter_learning_rate * ratio))
+		saver.save(sess, 'checkpoints/model.ckpt', epoch_n)
+		# print "Epoch ", epoch_n, ", Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs:mnist.test.labels, training: False}), "%"
+		with open('train_log', 'ab') as train_log:
+			# write test accuracy to file "train_log"
+			train_log_w = csv.writer(train_log)
+			log_i = [epoch_n] + sess.run([accuracy], feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False})
+			train_log_w.writerow(log_i)
 
-# print "Final Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False}), "%"
+print "Final Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False}), "%"
 
 sess.close()
