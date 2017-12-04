@@ -51,8 +51,23 @@ corpus = [dictionary.doc2bow(text) for text in texts]
 opt_num_topics = 10
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=opt_num_topics, id2word = dictionary, passes=20, minimum_probability=0.0)
 
-print ldamodel.print_topics(num_topics=opt_num_topics, num_words=4)
-# for i in range(10):
-# 	print ldamodel[corpus[i]]
+# print ldamodel.print_topics(num_topics=opt_num_topics, num_words=4)
+
+# create feature vector df
+index = df['postID']
+columns = ['phi_' + str(i) for i in range(10)]
+
+featureDF = pd.DataFrame(index=index, columns=columns)
+featureDF = featureDF.fillna(0)
+
+# for i in range(5):
+# 	vals = [x for x,y in ldamodel[corpus[i]]]
+# 	featureDF[i] = vals
+
+print dim(featureDF)
+print len(vals)
+
+
+# posts are rows and cols are vector components
 
 
