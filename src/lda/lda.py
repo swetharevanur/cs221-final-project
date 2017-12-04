@@ -48,7 +48,7 @@ corpus = [dictionary.doc2bow(text) for text in texts]
 
 # generate LDA model
 # optimal number of topics computed in lda_tuning.R
-opt_num_topics = 3
+opt_num_topics = 10
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=opt_num_topics, id2word = dictionary, passes=20, minimum_probability=0.0)
 
 # print ldamodel.print_topics(num_topics=opt_num_topics, num_words=4)
@@ -58,10 +58,10 @@ ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=opt_num_topics, id
 index = df['postID']
 columns = ['phi_' + str(i) for i in range(opt_num_topics)]
 
-# featureDF = featureDF.fillna(0)
+# featureDF = featureDF.fillna(0) 
 
 rows = []
-for i in range(1857):
+for i in range(len(doc_set)):
 	vals = {'phi_' + str(x): y for x,y in ldamodel[corpus[i]]}
 	rows.append(vals)
 	# print vals
