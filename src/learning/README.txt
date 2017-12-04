@@ -1,11 +1,10 @@
 Script execution order:
 
+1. Run labeled_data.py to generate list of records to be manually labeled.
+2. Run
+
 Label Spreading
-1. Run label_spreading.py
+1. Run label_spreading/label_spreading.py
 
-Semi-supervised SVM
-1. 
-
-Semi-supervised Quadratic Discriminant Analysis
-1. 
-
+Ladder Networks
+1. Run ladder/ladder_net.py

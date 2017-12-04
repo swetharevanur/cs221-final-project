@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # import file
 def importFilesAsDF():
 	pathToFile =r'../../data' # use your path
-	fileName = glob.glob(pathToFile + "/third_total_file_list.xlsx") # returns a list
+	fileName = glob.glob(pathToFile + "/filtered_third_total_file_list.xlsx") # returns a list
 	df = pd.read_excel(''.join(fileName)) # converts list to string
 	return df
 

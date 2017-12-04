@@ -6,7 +6,6 @@
 from gensim import corpora, models
 import gensim
 import pandas as pd
-import glob
 import math
 
 def importFilesAsDF():
