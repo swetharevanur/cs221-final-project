@@ -13,6 +13,7 @@
 # install.packages("ldatuning")
 # install.packages("gdata")
 # install.packages("tm")
+# install.packages("readxl")
 
 library(topicmodels)
 library(doParallel)
@@ -24,6 +25,7 @@ library(wordcloud)
 library(ldatuning)
 library(gdata)
 library(tm)
+library(readxl)
 
 # data("AssociatedPress", package="topicmodels")
 # full_data <- AssociatedPress
@@ -31,10 +33,8 @@ library(tm)
 # read in files
 path = "/Users/swetharevanur/Documents/2_Sophomore/1_Fall/CS 221/cs221-final-project/data/"
 setwd(path)
-rm(df)
-fileNames = unlist(list.files(pattern = "second_total_list_working*.xlsx"))
+fileNames = unlist(list.files(pattern = "filtered_third_total_file_list.xlsx"))
 print(fileNames)
-# fileName = "second_total_file_working*.xlsx"
 
 # declare empty dataframe
 columnNames = c("postCategory", "postDay", "postDistrict", "postID",
@@ -47,11 +47,10 @@ colnames(df) = columnNames
 for (fileName in fileNames) {
   fileName = toString(fileName)
   filePath = paste(path, fileName, sep = "")
-  filedf = read.xls(filePath,sheet = 1,header = TRUE)
+  filedf = read_excel(filePath)
+  # filedf = read.xls(filePath, sheet = 1, header = TRUE)
   df = rbind(filedf)  
 }
-
-print(ncol(df))
 
 # add another column that is the concatenation of the title + text columns
 colsToPaste = c('postText', 'postTitle')
