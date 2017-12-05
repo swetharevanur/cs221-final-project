@@ -12,8 +12,11 @@ import pandas as pd
 import math
 
 num_features = 7
-num_examples_total = 10
-num_labeled = 3
+num_examples_total = 300
+num_labeled = 130
+
+INDEX_OF_POSTID = 3
+INDEX_OF_LABEL = 12
 
 def importFilesAsDF(filename):
 	df = pd.read_excel(filename) # remove index?
@@ -78,14 +81,14 @@ def extract_labels(data_list, filename, one_hot=False):
 	for i in range(len(data_list)):
 		labeled = False
 		for label in labeled_list:
-			if data_list[i][0] in label[0]:
+			if data_list[i][0] == label[INDEX_OF_POSTID]:
 				labeled = True
-				label_vector.append(label[1])
+				label_vector.append(label[INDEX_OF_LABEL])
 				labeled_X.append(data_list[i][1:])
 				break
-		if not labeled:
-			unlabeled_X.append(data_list[i][1:])
-			unlabeled_vec.append(0)
+		# if not labeled:
+			# unlabeled_X.append(data_list[i][1:])
+			# unlabeled_vec.append(0)
 
 	labeled_X.extend(unlabeled_X)
 	X = labeled_X
@@ -165,6 +168,8 @@ class DataSet(object):
 class SemiDataSet(object):
 		def __init__(self, images, labels, n_labeled):
 				self.n_labeled = n_labeled
+				self._images = images
+				self._labels = labels
 
 				# Unlabeled DataSet
 				self.unlabeled_ds = DataSet(images, labels)
@@ -197,6 +202,15 @@ class SemiDataSet(object):
 				images = np.vstack([labeled_images, unlabeled_images])
 				return images, labels
 
+		@property
+		def images(self):
+			return self._images
+
+		@property
+		def labels(self):
+			return self._labels
+
+
 def read_data_sets(train_dir, n_labeled=10, fake_data=False, one_hot=False):
 	class DataSets(object):
 		pass
@@ -214,12 +228,12 @@ def read_data_sets(train_dir, n_labeled=10, fake_data=False, one_hot=False):
 	TEST_LABELS = 't10k-labels-idx1-ubyte.gz'
 	VALIDATION_SIZE = 0
 	# TEST_SIZE = int(math.floor(num_labeled/5))
-	TEST_SIZE = 2
+	TEST_SIZE = 20
 
 	# local_file = maybe_download(TRAIN_LABELS, train_dir)
-	image_file = 'dummy_lda_output.xlsx'
+	image_file = '../../../data/lda_features.xlsx'
 	data_set = loadDataSet(importFilesAsDF(image_file))
-	local_file = 'dummy_labeled_lda_output.xlsx'
+	local_file = '../../../data/labeled_third_total_file_list.xlsx'
 
 	X, train_labels = extract_labels(data_set,local_file, one_hot=one_hot)
 	train_images = extract_images(X)

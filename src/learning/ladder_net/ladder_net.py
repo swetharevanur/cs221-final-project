@@ -10,19 +10,19 @@ from tqdm import tqdm
 num_features =  7 # 784 
 num_classes = 2 #10
 
-layer_sizes = [num_features, 1000, 500, 250, 250, 250, num_classes]
+layer_sizes = [num_features, 20, 15, 13, 13, 13, num_classes]
 
 L = len(layer_sizes) - 1  # number of layers7
 
-num_examples = 10 #60000 # 10
+num_examples = 300 #60000 # 10
 num_epochs = 150
-num_labeled = 3 # 100 # 3
+num_labeled = 100 # 100 # 3
 
 starter_learning_rate = 0.02
 
 decay_after = 15  # epoch after which to begin learning rate decay
 
-batch_size = 1 #100 # 3
+batch_size = 10 #100 # 3
 num_iter = (num_examples/batch_size) * num_epochs  # number of loop iterations
 
 inputs = tf.placeholder(tf.float32, shape=(None, layer_sizes[0]))
@@ -257,6 +257,9 @@ for i in tqdm(range(i_iter, num_iter)):
 			log_i = [epoch_n] + sess.run([accuracy], feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False})
 			train_log_w.writerow(log_i)
 
-print "Final Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False}), "%"
+print "Final Test Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.test.images, outputs: mnist.test.labels, training: False}), "%"
+tf.confusionmatrix(mnist.test.labels, predictions)
+# print "Final Train Accuracy: ", sess.run(accuracy, feed_dict={inputs: mnist.train.images, outputs: mnist.train.labels, training: False}), "%"
+
 
 sess.close()

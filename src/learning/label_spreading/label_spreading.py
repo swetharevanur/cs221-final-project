@@ -71,6 +71,7 @@ def getXLabelVector(data_list, labeled_df):
 
 	label_vector = []
 	labeled_X = []
+	labeled_post_ID_vec = []
 	unlabeled_X = []
 	unlabeled_vec = []
 	final_x = []
@@ -82,6 +83,7 @@ def getXLabelVector(data_list, labeled_df):
 				labeled = True
 				label_vector.append(label[12])
 				labeled_X.append(data_list[i][1:])
+				labeled_post_ID_vec.append(data_list[i][0])
 				break
 		# if not labeled:
 			# unlabeled_X.append(data_list[i][1:])
@@ -93,7 +95,7 @@ def getXLabelVector(data_list, labeled_df):
 	label_vector.extend(unlabeled_vec)
 	y = label_vector
 
-	return X, y, final_x
+	return X, y, final_x, labeled_post_ID_vec
 	
 
 
@@ -124,11 +126,21 @@ def predictRestOfData(lp_model, data):
 	filename = 'predicted_labels.xlsx'
 	predict_df.to_excel(filename, index=False)
 
+def savePredicitons(indices, predicted_labels, post_ids):
+	predictions = []
+	for i in range(len(indices)):
+		prediction = {}
+		prediction['postID'] = post_ids[indices[i]]
+		prediction['prediction'] = predicted_labels[i]
+		predictions.append(prediction)
+	predict_df = pd.DataFrame(predictions)
+	filename = 'predicted_labels.xlsx'
+	predict_df.to_excel(filename, index=False)
 
 def labelSpread(df,labeled_df):
 	# load data and labels 
 	data = loadDataSet(df)
-	X,y,unlabeled_X= getXLabelVector(data,labeled_df)
+	X,y,unlabeled_X, post_ids= getXLabelVector(data,labeled_df)
 	# rng = np.random.RandomState(0)
 	indices = np.arange(len(X))
 	# rng.shuffle(indices)
@@ -144,7 +156,7 @@ def labelSpread(df,labeled_df):
 	y_train[unlabeled_set] = -1
 
 	# lp_model = LabelSpreading(gamma=0.25, max_iter=500)
-	lp_model = LabelSpreading(kernel = 'knn', n_neighbors = 13 ,max_iter=10000)
+	lp_model = LabelSpreading(kernel = 'rbf', n_neighbors = 13 ,max_iter=10000)
 	lp_model.fit(X, y_train)
 	predicted_labels = lp_model.transduction_[unlabeled_set]
 	# saveToFile(predicted_labels, )
@@ -162,7 +174,7 @@ def labelSpread(df,labeled_df):
 
 	cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 	plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Reds)
-	plt.title('Normalized confusion matrix')
+	plt.title('RBF Confusion Matrix')
 	plt.colorbar()
 	tick_marks = np.arange(len(classes))
 	plt.xticks(tick_marks, classes, rotation=45)
@@ -178,7 +190,9 @@ def labelSpread(df,labeled_df):
 	plt.tight_layout()
 	plt.ylabel('True label')
 	plt.xlabel('Predicted label')
-	plt.show()
+	# plt.show()
+	savePredicitons(unlabeled_set, predicted_labels, post_ids)
+
 
 
 def __init__():

@@ -8,7 +8,7 @@ import re
 countries_of_interest = ['china', 'vietnam', 'korea', 'thailand', 'asian'] #TODO: add emojis of country flags
 multiple_victims_keywords = ['girls', 'women', 'men', 'boys', 'people', 'children', 'babes', 'dolls', 'masseuses']
 weight_boundary = 110
-word_phrases = ['young', 'fresh', 'new', 'new in town', 'new arrrival', 'open minded', 'petite', \
+word_phrases = ['young', 'fresh', 'new', 'new in town', 'new arrival', 'open minded', 'petite', \
 'exotic', 'youthful', 'barely legal', 'virgin', 'tiny', 'incall','in call', 'new to the game', 'candy', ]
 
 spa_and_massage = ['spa', 'massage']
@@ -31,8 +31,4 @@ def presenceOfPhrasesAndWords(text):
 
 def presenceOfSpa(text):
 	return 1 if any(word in text for word in spa_and_massage) else 0
-
-# def containsWebsite(text):
-# 	return 1 if 'http' in text else 0
-
-# print presenceOfPhrasesAndWords('in calp')
+	
