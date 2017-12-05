@@ -52,7 +52,7 @@ plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")
 
 # lower max_font_size
-wordcloud = WordCloud(max_font_size=40).generate(text)
+wordcloud = WordCloud(max_font_size=40, colormap = 'RdGy').generate(text)
 plt.figure()
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
