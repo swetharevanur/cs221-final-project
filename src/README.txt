@@ -5,3 +5,5 @@ Script execution order:
 3. Merge batch outputs and preprocess post texts with data_collator.py.
 
 OUTPUT FILE: ../data/third_total_file_list.xlsx
+
+Visit each subdirectory for a separate README (in this order: feature_engineering, lda, learning)
