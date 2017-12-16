@@ -1,7 +1,6 @@
+# Adapted from: https://github.com/rinuboney/ladder
 import tensorflow as tf
-# import input_data
 import import_data as input_data
-# import input_data
 import math
 import os
 import csv
@@ -10,7 +9,7 @@ from tqdm import tqdm
 num_features =  7 # 784 
 num_classes = 2 #10
 
-layer_sizes = [num_features, 20, 15, 13, 13, 13, num_classes]
+layer_sizes = [num_features, 50, 25, 20, 20, 20, num_classes]
 
 L = len(layer_sizes) - 1  # number of layers7
 

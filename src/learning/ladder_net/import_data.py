@@ -13,7 +13,7 @@ import math
 
 num_features = 7
 num_examples_total = 300
-num_labeled = 130
+num_labeled = 100
 
 INDEX_OF_POSTID = 3
 INDEX_OF_LABEL = 12
@@ -228,7 +228,7 @@ def read_data_sets(train_dir, n_labeled=10, fake_data=False, one_hot=False):
 	TEST_LABELS = 't10k-labels-idx1-ubyte.gz'
 	VALIDATION_SIZE = 0
 	# TEST_SIZE = int(math.floor(num_labeled/5))
-	TEST_SIZE = 20
+	TEST_SIZE = 10
 
 	# local_file = maybe_download(TRAIN_LABELS, train_dir)
 	image_file = '../../../data/lda_features.xlsx'
